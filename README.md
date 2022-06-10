@@ -1,6 +1,6 @@
 # message_ink
 
-This is the `world tree` message lib in ink!.
+This is the message defination lib for the protocol stack in ink!.
 
 ## Usage
 
