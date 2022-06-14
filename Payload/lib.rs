@@ -250,5 +250,39 @@ mod Payload {
 
             assert_eq!(v1, v2);
         }
+
+        /// test msg hash
+        #[ink::test]
+        fn test_msg_hash() {
+            // let default_str = ink_prelude::string::String::from("default str");
+            // let default_num: [u8;32] = [0; 32];
+            // let default_act: [u8;4] = [0;4];
+            // let recv_msg = super::super::message_define::IReceivedMessage::new(
+            //     18,
+            //     default_str.clone(),
+            //     default_num.clone(),
+            //     default_num.clone(),
+            //     ink_prelude::vec![],
+            //     default_num,
+            //     default_act,
+            //     super::super::message_define::MessagePayload::new(),
+            //     super::super::message_define::ISession {
+            //         msg_type: 3,
+            //         id: 128,
+            //     },
+            // );
+
+            use ink_env::hash::{Sha2x256, HashOutput};
+            let input: &[u8] = &[13, 14, 15];
+            // `output1` is the type of `[u8;32]`
+            let mut output1 = <Sha2x256 as HashOutput>::Type::default(); // 256-bit buffer
+            let hash  = ink_env::hash_bytes::<Sha2x256>(input, &mut output1);
+
+            let mut output2 = <Sha2x256 as HashOutput>::Type::default(); // 256-bit buffer
+            let hash  = ink_env::hash_bytes::<Sha2x256>(input, &mut output2);
+
+            assert_eq!(hash, ());
+            assert_eq!(output1, output2);
+        }
     }
 }
