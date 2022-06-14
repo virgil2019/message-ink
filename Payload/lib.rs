@@ -260,19 +260,19 @@ mod Payload {
             let recv_msg = super::super::message_define::IReceivedMessage::new(
                 18,
                 default_str.clone(),
-                default_num.clone(),
-                default_num.clone(),
+                default_str.clone(),
+                default_str.clone(),
                 ink_prelude::vec![],
                 default_num,
                 default_act,
-                super::super::message_define::MessagePayload::new(),
+                super::super::ink_prelude::vec![],
                 super::super::message_define::ISession {
                     msg_type: 3,
                     id: 128,
                 },
             );
 
-            use ink_env::hash::{Sha2x256, HashOutput};
+            // use ink_env::hash::{Sha2x256, HashOutput};
             // let input: &[u8] = &[13, 14, 15];
             // `output1` is the type of `[u8;32]`
             // let mut output1 = <Sha2x256 as HashOutput>::Type::default(); // 256-bit buffer
