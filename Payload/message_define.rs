@@ -46,7 +46,7 @@ impl scale_info::TypeInfo for IError {
 }
 
 /// Content structure
-#[derive(Decode, Encode)]
+#[derive(Clone, Decode, Encode)]
 // #[cfg_attr(feature = "std", derive(Debug, scale_info::TypeInfo))]
 pub struct IContent {
     contract: String,
@@ -156,7 +156,7 @@ impl scale_info::TypeInfo for ISession {
 }
 
 /// Received message structure
-#[derive(Debug, Decode, Encode)]
+#[derive(Debug, Clone, Decode, Encode)]
 // #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
 pub struct IReceivedMessage {
     pub id: u128,
@@ -226,7 +226,7 @@ impl IReceivedMessage {
 }
 
 /// Sent message structure
-#[derive(Decode, Encode)]
+#[derive(Clone, Decode, Encode)]
 // #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
 pub struct ISentMessage {
     pub id: u128,
