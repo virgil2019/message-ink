@@ -3,14 +3,13 @@
 pub mod message_protocol;
 pub mod message_define;
 
-pub use self::Payload::{
+pub use self::payload::{
     Payload as Other,
     PayloadRef,
 };
 
 use ink_lang as ink;
 use ink_prelude;
-use ink_storage;
 
 
 /// This is an example that shows how can user-defined struct be used for other contracts as parameter in `message` interface
@@ -35,7 +34,7 @@ impl ::scale_info::TypeInfo for TestData{
 }
 
 #[ink::contract]
-mod Payload {
+mod payload {
 
     use ink_storage::traits::{SpreadAllocate};
 
@@ -97,12 +96,12 @@ mod Payload {
 
         /// Test the message Type.
         #[ink(message)]
-        pub fn getMessage(&self, msg: super::message_protocol::MessagePayload) -> super::message_protocol::MessagePayload {
+        pub fn get_message(&self, msg: super::message_protocol::MessagePayload) -> super::message_protocol::MessagePayload {
             msg
         }
 
         #[ink(message)]
-        pub fn getRecvMessage(&self, msg: super::message_define::IReceivedMessage) -> super::message_define::IReceivedMessage {
+        pub fn get_recv_message(&self, msg: super::message_define::IReceivedMessage) -> super::message_define::IReceivedMessage {
             msg
         }
 
@@ -148,8 +147,8 @@ mod Payload {
         /// We test if the default constructor does its job.
         #[ink::test]
         fn default_works() {
-            let Payload = Payload::default();
-            assert_eq!(Payload.get(), false);
+            let payload = Payload::default();
+            assert_eq!(payload.get(), false);
         }
 
         /// We test a simple use case of our contract.
@@ -159,7 +158,7 @@ mod Payload {
             m_hm.push((1, 1));
             m_hm.push((2, 2));
 
-            let mut m_hash_map: ink_prelude::collections::HashMap<u32, u32> = ink_prelude::collections::HashMap::from_iter(m_hm.clone());
+            // let m_hash_map: ink_prelude::collections::HashMap<u32, u32> = ink_prelude::collections::HashMap::from_iter(m_hm.clone());
 
             assert_eq!(*m_hm, [(1, 1), (2, 2)]);
 
@@ -218,9 +217,9 @@ mod Payload {
             vec_eles.push(msg.clone());
             vec_eles.push(msg.clone());
 
-            let msg_item_vec = super::super::message_protocol::MessageItem::from(ink_prelude::string::String::from("11"), 
-                                                                                    super::super::message_protocol::MsgType::UserData, 
-                                                                                    vec_eles.clone());
+            // let msg_item_vec = super::super::message_protocol::MessageItem::from(ink_prelude::string::String::from("11"), 
+            //                                                                         super::super::message_protocol::MsgType::UserData, 
+            //                                                                         vec_eles.clone());
 
             assert_eq!(msg_payload.push_item(ink_prelude::string::String::from("11"), 
                                                 super::super::message_protocol::MsgType::UserData, 
