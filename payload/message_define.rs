@@ -94,7 +94,7 @@ impl ::scale_info::TypeInfo for ISQoSType {
 
     fn type_info() -> ::scale_info::Type {
         ::scale_info::Type::builder()
-                        .path(::scale_info::Path::new("SQoSType", module_path!()))
+                        .path(::scale_info::Path::new("ISQoSType", module_path!()))
                         .variant(
                             ::scale_info::build::Variants::new()
                                 .variant("Reveal", |v| v.index(0))
@@ -350,7 +350,7 @@ impl scale_info::TypeInfo for IContext {
 
     fn type_info() -> ::scale_info::Type {
         ::scale_info::Type::builder()
-                        .path(::scale_info::Path::new("IReceivedMessage", module_path!()))
+                        .path(::scale_info::Path::new("IContext", module_path!()))
                         .composite(::scale_info::build::Fields::named()
                         .field(|f| f.ty::<u128>().name("id").type_name("u128"))
                         .field(|f| f.ty::<String>().name("from_chain").type_name("String"))
