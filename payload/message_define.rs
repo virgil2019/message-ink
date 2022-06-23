@@ -83,6 +83,7 @@ pub enum ISQoSType{
     Threshold,
     Priority,
     ExceptionRollback,
+    SelectionDelay,
     Anonymous,
     Identity,
     Isolation,
@@ -102,10 +103,11 @@ impl ::scale_info::TypeInfo for ISQoSType {
                                 .variant("Threshold", |v| v.index(2))
                                 .variant("Priority", |v| v.index(3))
                                 .variant("ExceptionRollback", |v| v.index(4))
-                                .variant("Anonymous", |v| v.index(5))
-                                .variant("Identity", |v| v.index(6))
-                                .variant("Isolation", |v| v.index(7))
-                                .variant("CrossVerify", |v| v.index(8))
+                                .variant("SelectionDelay", |v| v.index(5))
+                                .variant("Anonymous", |v| v.index(6))
+                                .variant("Identity", |v| v.index(7))
+                                .variant("Isolation", |v| v.index(8))
+                                .variant("CrossVerify", |v| v.index(9))
                         )
     }
 }
