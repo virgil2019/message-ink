@@ -25,7 +25,7 @@ pub enum MsgDetail{
     InkI32Array(ink_prelude::vec::Vec<i32>),
     InkI64Array(ink_prelude::vec::Vec<i64>),
     InkI128Array(ink_prelude::vec::Vec<i128>),
-    UserData(ink_prelude::vec::Vec<u8>),
+    UserData(u8, ink_prelude::vec::Vec<u8>),
 }
 
 impl ::scale_info::TypeInfo for MsgDetail {
@@ -42,23 +42,23 @@ impl ::scale_info::TypeInfo for MsgDetail {
                                 .variant("InkU32", |v| v.index(3).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<u32>())))
                                 .variant("InkU64", |v| v.index(4).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<u64>())))
                                 .variant("InkU128", |v| v.index(5).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<u128>())))
-                                .variant("InkI8(i8)", |v| v.index(6))
-                                .variant("InkI16(i16)", |v| v.index(7))
-                                .variant("InkI32(i32)", |v| v.index(8))
-                                .variant("InkI64(i64)", |v| v.index(9))
-                                .variant("InkI128(i128)", |v| v.index(10))
-                                .variant("InkStringArray(ink_prelude::vec::Vec<ink_prelude::string::String>)", |v| v.index(11))
-                                .variant("InkU8Array(ink_prelude::vec::Vec<u8>)", |v| v.index(12))
-                                .variant("InkU16Array(ink_prelude::vec::Vec<u16>)", |v| v.index(13))
-                                .variant("InkU32Array(ink_prelude::vec::Vec<u32>)", |v| v.index(14))
-                                .variant("InkU64Array(ink_prelude::vec::Vec<u64>)", |v| v.index(15))
-                                .variant("InkU128Array(ink_prelude::vec::Vec<u128>)", |v| v.index(16))
-                                .variant("InkI8Array(ink_prelude::vec::Vec<i8>)", |v| v.index(17))
-                                .variant("InkI16Array(ink_prelude::vec::Vec<i16>)", |v| v.index(18))
-                                .variant("InkI32Array(ink_prelude::vec::Vec<i32>)", |v| v.index(19))
-                                .variant("InkI64Array(ink_prelude::vec::Vec<i64>)", |v| v.index(20))
-                                .variant("InkI128Array(ink_prelude::vec::Vec<i128>)", |v| v.index(21))
-                                .variant("UserData(ink_prelude::vec::Vec<u8>", |v| v.index(22))
+                                .variant("InkI8", |v| v.index(6).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<i8>())))
+                                .variant("InkI16", |v| v.index(7).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<i16>())))
+                                .variant("InkI32", |v| v.index(8).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<i32>())))
+                                .variant("InkI64", |v| v.index(9).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<i64>())))
+                                .variant("InkI128", |v| v.index(10).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<i128>())))
+                                .variant("InkStringArray", |v| v.index(11).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<ink_prelude::string::String>>())))
+                                .variant("InkU8Array", |v| v.index(12).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<u8>>())))
+                                .variant("InkU16Array", |v| v.index(13).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<u16>>())))
+                                .variant("InkU32Array", |v| v.index(14).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<u32>>())))
+                                .variant("InkU64Array", |v| v.index(15).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<u64>>())))
+                                .variant("InkU128Array", |v| v.index(16).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<u128>>())))
+                                .variant("InkI8Array", |v| v.index(17).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<i8>>())))
+                                .variant("InkI16Array", |v| v.index(18).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<i16>>())))
+                                .variant("InkI32Array", |v| v.index(19).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<i32>>())))
+                                .variant("InkI64Array", |v| v.index(20).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<i64>>())))
+                                .variant("InkI128Array", |v| v.index(21).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<i128>>())))
+                                .variant("UserData", |v| v.index(22).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<u8>()).field(|f| f.ty::<ink_prelude::vec::Vec<u8>>())))
                         )
     }
 }
@@ -315,6 +315,18 @@ impl InMsgType for ink_prelude::vec::Vec<i128>{
     fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkI128Array(val) = type_value.clone() {
             Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+/// for user data, temporarily reserved
+impl InMsgType for (u8, ink_prelude::vec::Vec<u8>) {
+    type MyType = (u8, ink_prelude::vec::Vec<u8>);
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::UserData(val1, val2) = type_value.clone() {
+            Some((val1, val2))
         } else {
             None
         }

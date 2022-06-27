@@ -109,26 +109,127 @@ mod payload {
         #[ink(message)]
         pub fn test_callee_received(&self, m_payload: super::message_protocol::MessagePayload) ->ink_prelude::string::String{
             let mut s = ink_prelude::string::String::new();
-
-            // `1` is user defined `MessageItem` id
-            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("1")) {
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("0")) {
                 let ss = item.in_to::<ink_prelude::string::String>();
                 s = s + &ink_prelude::format!("{:?}", ss);
                 s = s + "\n";
             }
-
-            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("11")) {
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("1")) {
                 // This is for test, and use `if let` is better
                 let ss = match item.tv.clone() {
-                    super::message_protocol::MsgDetail::InkI128Array(val) => {
+                    super::message_protocol::MsgDetail::InkU8(val) => {
                         ink_prelude::format!("{:?}", val)
                     },
                     _ => {
                         ink_prelude::string::String::from("")
                     }
                 };
-
                 s = s + &ss;
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("2")) {
+                let ss = item.in_to::<u16>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("3")) {
+                let ss = item.in_to::<u32>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("4")) {
+                let ss = item.in_to::<u64>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("5")) {
+                let ss = item.in_to::<u128>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("6")) {
+                let ss = item.in_to::<i8>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("7")) {
+                let ss = item.in_to::<i16>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("8")) {
+                let ss = item.in_to::<i32>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("9")) {
+                let ss = item.in_to::<i64>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("10")) {
+                let ss = item.in_to::<i128>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("11")) {
+                let ss = item.in_to::<ink_prelude::vec::Vec<ink_prelude::string::String>>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("12")) {
+                let ss = item.in_to::<ink_prelude::vec::Vec<u8>>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("13")) {
+                let ss = item.in_to::<ink_prelude::vec::Vec<u16>>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("14")) {
+                let ss = item.in_to::<ink_prelude::vec::Vec<u32>>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("15")) {
+                let ss = item.in_to::<ink_prelude::vec::Vec<u64>>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("16")) {
+                let ss = item.in_to::<ink_prelude::vec::Vec<u128>>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("17")) {
+                let ss = item.in_to::<ink_prelude::vec::Vec<i8>>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("18")) {
+                let ss = item.in_to::<ink_prelude::vec::Vec<i16>>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("19")) {
+                let ss = item.in_to::<ink_prelude::vec::Vec<i32>>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("20")) {
+                let ss = item.in_to::<ink_prelude::vec::Vec<i64>>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("21")) {
+                let ss = item.in_to::<ink_prelude::vec::Vec<i128>>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("22")) {
+                let ss = item.in_to::<(u8, ink_prelude::vec::Vec<u8>)>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
             }
 
             s
