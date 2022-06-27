@@ -2,77 +2,347 @@
 /// U64, I64, U128, I128 will be decoded as `InkString`
 #[derive(Debug, PartialEq, Eq, scale::Encode, scale::Decode, Clone)]
 // #[cfg_attr(feature = "std", derive())]
-pub enum MsgType{
-    InkString,
-    InkU8,
-    InkU16,
-    InkU32,
-    InkU64,
-    InkU128,
-    InkI8,
-    InkI16,
-    InkI32,
-    InkI64,
-    InkI128,
-    InkStringArray,
-    InkU8Array,
-    InkU16Array,
-    InkU32Array,
-    InkU64Array,
-    InkU128Array,
-    InkI8Array,
-    InkI16Array,
-    InkI32Array,
-    InkI64Array,
-    InkI128Array,
-    UserData,
+pub enum MsgDetail{
+    InkString(ink_prelude::string::String),
+    InkU8(u8),
+    InkU16(u16),
+    InkU32(u32),
+    InkU64(u64),
+    InkU128(u128),
+    InkI8(i8),
+    InkI16(i16),
+    InkI32(i32),
+    InkI64(i64),
+    InkI128(i128),
+    InkStringArray(ink_prelude::vec::Vec<ink_prelude::string::String>),
+    InkU8Array(ink_prelude::vec::Vec<u8>),
+    InkU16Array(ink_prelude::vec::Vec<u16>),
+    InkU32Array(ink_prelude::vec::Vec<u32>),
+    InkU64Array(ink_prelude::vec::Vec<u64>),
+    InkU128Array(ink_prelude::vec::Vec<u128>),
+    InkI8Array(ink_prelude::vec::Vec<i8>),
+    InkI16Array(ink_prelude::vec::Vec<i16>),
+    InkI32Array(ink_prelude::vec::Vec<i32>),
+    InkI64Array(ink_prelude::vec::Vec<i64>),
+    InkI128Array(ink_prelude::vec::Vec<i128>),
+    UserData(ink_prelude::vec::Vec<u8>),
 }
 
-impl ::scale_info::TypeInfo for MsgType {
+impl ::scale_info::TypeInfo for MsgDetail {
     type Identity = Self;
 
     fn type_info() -> ::scale_info::Type {
         ::scale_info::Type::builder()
-                        .path(::scale_info::Path::new("MsgType", module_path!()))
+                        .path(::scale_info::Path::new("MsgDetail", module_path!()))
                         .variant(
                             ::scale_info::build::Variants::new()
-                                .variant("InkString", |v| v.index(0))
-                                .variant("InkU8", |v| v.index(1))
-                                .variant("InkU16", |v| v.index(2))
-                                .variant("InkU32", |v| v.index(3))
-                                .variant("InkU64", |v| v.index(4))
-                                .variant("InkU128", |v| v.index(5))
-                                .variant("InkI8", |v| v.index(6))
-                                .variant("InkI16", |v| v.index(7))
-                                .variant("InkI32", |v| v.index(8))
-                                .variant("InkI64", |v| v.index(9))
-                                .variant("InkI128", |v| v.index(10))
-                                .variant("InkStringArray", |v| v.index(11))
-                                .variant("InkU8Array", |v| v.index(12))
-                                .variant("InkU16Array", |v| v.index(13))
-                                .variant("InkU32Array", |v| v.index(14))
-                                .variant("InkU64Array", |v| v.index(15))
-                                .variant("InkU128Array", |v| v.index(16))
-                                .variant("InkI8Array", |v| v.index(17))
-                                .variant("InkI16Array", |v| v.index(18))
-                                .variant("InkI32Array", |v| v.index(19))
-                                .variant("InkI64Array", |v| v.index(20))
-                                .variant("InkI128Array", |v| v.index(21))
-                                .variant("UserData", |v| v.index(22))
+                                .variant("InkString", |v| v.index(0).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::string::String>())))
+                                .variant("InkU8", |v| v.index(1).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<u8>())))
+                                .variant("InkU16", |v| v.index(2).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<u16>())))
+                                .variant("InkU32", |v| v.index(3).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<u32>())))
+                                .variant("InkU64", |v| v.index(4).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<u64>())))
+                                .variant("InkU128", |v| v.index(5).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<u128>())))
+                                .variant("InkI8(i8)", |v| v.index(6))
+                                .variant("InkI16(i16)", |v| v.index(7))
+                                .variant("InkI32(i32)", |v| v.index(8))
+                                .variant("InkI64(i64)", |v| v.index(9))
+                                .variant("InkI128(i128)", |v| v.index(10))
+                                .variant("InkStringArray(ink_prelude::vec::Vec<ink_prelude::string::String>)", |v| v.index(11))
+                                .variant("InkU8Array(ink_prelude::vec::Vec<u8>)", |v| v.index(12))
+                                .variant("InkU16Array(ink_prelude::vec::Vec<u16>)", |v| v.index(13))
+                                .variant("InkU32Array(ink_prelude::vec::Vec<u32>)", |v| v.index(14))
+                                .variant("InkU64Array(ink_prelude::vec::Vec<u64>)", |v| v.index(15))
+                                .variant("InkU128Array(ink_prelude::vec::Vec<u128>)", |v| v.index(16))
+                                .variant("InkI8Array(ink_prelude::vec::Vec<i8>)", |v| v.index(17))
+                                .variant("InkI16Array(ink_prelude::vec::Vec<i16>)", |v| v.index(18))
+                                .variant("InkI32Array(ink_prelude::vec::Vec<i32>)", |v| v.index(19))
+                                .variant("InkI64Array(ink_prelude::vec::Vec<i64>)", |v| v.index(20))
+                                .variant("InkI128Array(ink_prelude::vec::Vec<i128>)", |v| v.index(21))
+                                .variant("UserData(ink_prelude::vec::Vec<u8>", |v| v.index(22))
                         )
     }
 }
 
+// pub trait MsgDetailTrait{
+//     // fn get_type_value(&self) -> MsgDetail;
+// }
+
+/// enum variants are not `types`, we cannot generic more!
+// impl MsgDetailTrait for MsgDetail::InkI128 {
+    
+// }
+
+pub trait InMsgType {
+    type MyType;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType>;
+}
+
+/// enum variants are not `types`, we cannot generic more!
+/// impl for `ink_prelude::string::String`
+impl InMsgType for ink_prelude::string::String{
+    type MyType = ink_prelude::string::String;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkString(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for ink_prelude::vec::Vec<ink_prelude::string::String>{
+    type MyType = ink_prelude::vec::Vec<ink_prelude::string::String>;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkStringArray(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for u8{
+    type MyType = u8;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkU8(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for ink_prelude::vec::Vec<u8>{
+    type MyType = ink_prelude::vec::Vec<u8>;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkU8Array(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for u16{
+    type MyType = u16;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkU16(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for ink_prelude::vec::Vec<u16>{
+    type MyType = ink_prelude::vec::Vec<u16>;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkU16Array(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for u32{
+    type MyType = u32;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkU32(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for ink_prelude::vec::Vec<u32>{
+    type MyType = ink_prelude::vec::Vec<u32>;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkU32Array(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for u64{
+    type MyType = u64;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkU64(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for ink_prelude::vec::Vec<u64>{
+    type MyType = ink_prelude::vec::Vec<u64>;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkU64Array(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for u128{
+    type MyType = u128;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkU128(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for ink_prelude::vec::Vec<u128>{
+    type MyType = ink_prelude::vec::Vec<u128>;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkU128Array(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for i8{
+    type MyType = i8;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkI8(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for ink_prelude::vec::Vec<i8>{
+    type MyType = ink_prelude::vec::Vec<i8>;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkI8Array(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for i16{
+    type MyType = i16;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkI16(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for ink_prelude::vec::Vec<i16>{
+    type MyType = ink_prelude::vec::Vec<i16>;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkI16Array(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for i32{
+    type MyType = i32;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkI32(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for ink_prelude::vec::Vec<i32>{
+    type MyType = ink_prelude::vec::Vec<i32>;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkI32Array(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for i64{
+    type MyType = i64;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkI64(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for ink_prelude::vec::Vec<i64>{
+    type MyType = ink_prelude::vec::Vec<i64>;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkI64Array(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for i128{
+    type MyType = i128;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkI128(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+impl InMsgType for ink_prelude::vec::Vec<i128>{
+    type MyType = ink_prelude::vec::Vec<i128>;
+    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkI128Array(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+}
+
+// impl<T> MsgValueOut for T 
+// where
+//     T: InMsgType,
+// {
+//     type MyType = T;
+//     fn get_value<MyType, ET: MsgDetailTrait>(type_value: & MsgDetail) -> Option<Self::MyType> {
+//         if let ET(val) = type_value.clone() {
+//             Some(val)
+//         } else {
+//             None
+//         }
+//     }
+// }
+
 /// Message Item, used for describing the information composed with a single element
 /// @member `n`: item unique ID, which is used for user applications to communicate user-defined informations
-/// @member `t`: item type
-/// @member `v`: the information data, encoded by `scale::Encode::encode_to`
+/// @member `tv`: item type and the information data
 #[derive(Debug, Eq, scale::Encode, scale::Decode, Clone)]
 // #[cfg_attr(feature = "std", derive())]
 pub struct MessageItem{
     pub n: ink_prelude::string::String,
-    pub t: MsgType,
-    pub v: ink_prelude::vec::Vec<u8>,
+    pub tv: MsgDetail,
 }
 
 impl PartialEq for MessageItem {
@@ -89,26 +359,21 @@ impl ::scale_info::TypeInfo for MessageItem {
                         .path(::scale_info::Path::new("MessageItem", module_path!()))
                         .composite(::scale_info::build::Fields::named()
                         .field(|f| f.ty::<ink_prelude::string::String>().name("n").type_name("ink_prelude::string::String"))
-                        .field(|f| f.ty::<MsgType>().name("t").type_name("MsgType"))
-                        .field(|f| f.ty::<ink_prelude::vec::Vec<u8>>().name("v").type_name("ink_prelude::vec::Vec<u8>"))
+                        .field(|f| f.ty::<MsgDetail>().name("tv").type_name("MsgDetail"))
                     )
     }
 }
 
 impl MessageItem {
-    pub fn from<T: scale::Encode>(n: ink_prelude::string::String, t: MsgType, vs: T) -> Self {
-        let mut v = ink_prelude::vec::Vec::new();
-        scale::Encode::encode_to(&vs, &mut v);
+    pub fn from(n: ink_prelude::string::String, tv: MsgDetail) -> Self {
         Self {
             n, 
-            t,
-            v,
+            tv,
         }
     }
 
-    pub fn in_to<T: scale::Decode>(&self) -> T{
-        let mut v_ref = self.v.as_slice();
-        scale::Decode::decode(&mut v_ref).unwrap()
+    pub fn in_to<T: scale::Decode + InMsgType>(&self) -> Option<T::MyType>{
+        T::get_value::<T>(&self.tv)
     }
 }
 
@@ -141,8 +406,8 @@ impl MessagePayload{
     }
 
     /// for `item`
-    pub fn push_item<T: scale::Encode>(&mut self, n: ink_prelude::string::String, t: MsgType, vs: T) -> bool {
-        let msg_item = MessageItem::from(n, t, vs);
+    pub fn push_item<T: scale::Encode>(&mut self, n: ink_prelude::string::String, tv: MsgDetail) -> bool {
+        let msg_item = MessageItem::from(n, tv);
         if let Some(item) = &mut self.items {
             if item.contains(&msg_item){
                 return false;
