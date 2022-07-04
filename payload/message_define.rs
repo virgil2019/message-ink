@@ -309,7 +309,7 @@ impl IRequestMessage {
 // #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
 pub struct IResponseMessage {
     pub sqos: ink_prelude::vec::Vec<ISQoS>,
-    pub content: IContent,
+    pub data: ink_prelude::vec::Vec<u8>,
 }
 
 impl scale_info::TypeInfo for IResponseMessage {
@@ -320,16 +320,16 @@ impl scale_info::TypeInfo for IResponseMessage {
                         .path(::scale_info::Path::new("IResponseMessage", module_path!()))
                         .composite(::scale_info::build::Fields::named()
                         .field(|f| f.ty::<ink_prelude::vec::Vec<ISQoS>>().name("sqos").type_name("ink_prelude::vec::Vec<ISQoS>"))
-                        .field(|f| f.ty::<IContent>().name("content").type_name("IContent"))
+                        .field(|f| f.ty::<ink_prelude::vec::Vec<u8>>().name("data").type_name("ink_prelude::vec::Vec<u8>"))
                     )
     }
 }
 
 impl IResponseMessage {
-    pub fn new(sqos: ink_prelude::vec::Vec<ISQoS>, content: IContent) -> Self {
+    pub fn new(sqos: ink_prelude::vec::Vec<ISQoS>, data: ink_prelude::vec::Vec<u8>) -> Self {
         Self {
             sqos,
-            content,
+            data,
         }
     }
 }
@@ -345,6 +345,7 @@ pub struct IContext {
     pub sqos: ink_prelude::vec::Vec<ISQoS>,
     pub contract: [u8;32],
     pub action: [u8;4],
+    pub session: ISession,
 }
 
 impl scale_info::TypeInfo for IContext {
@@ -366,7 +367,8 @@ impl scale_info::TypeInfo for IContext {
 }
 
 impl IContext {
-    pub fn new(id: u128, from_chain: String, sender: String, signer: String, sqos: ink_prelude::vec::Vec<ISQoS>, contract: [u8;32], action: [u8;4]) -> Self {
+    pub fn new(id: u128, from_chain: String, sender: String, signer: String, sqos: ink_prelude::vec::Vec<ISQoS>,
+            contract: [u8;32], action: [u8;4], session: ISession) -> Self {
         Self {
             id,
             from_chain,
@@ -375,6 +377,7 @@ impl IContext {
             sqos,
             contract,
             action,
+            session,
         }
     }
 }
