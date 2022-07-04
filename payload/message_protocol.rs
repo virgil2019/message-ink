@@ -74,262 +74,355 @@ impl ::scale_info::TypeInfo for MsgDetail {
 
 pub trait InMsgType {
     type MyType;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType>;
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType>;
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail;
 }
 
 /// enum variants are not `types`, we cannot generic more!
 /// impl for `ink_prelude::string::String`
 impl InMsgType for ink_prelude::string::String{
     type MyType = ink_prelude::string::String;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkString(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkString(msg_detail)
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<ink_prelude::string::String>{
     type MyType = ink_prelude::vec::Vec<ink_prelude::string::String>;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkStringArray(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkStringArray(msg_detail)
+    }
 }
 
 impl InMsgType for u8{
     type MyType = u8;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkU8(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkU8(msg_detail)
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<u8>{
     type MyType = ink_prelude::vec::Vec<u8>;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkU8Array(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkU8Array(msg_detail)
+    }
 }
 
 impl InMsgType for u16{
     type MyType = u16;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkU16(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkU16(msg_detail)
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<u16>{
     type MyType = ink_prelude::vec::Vec<u16>;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkU16Array(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkU16Array(msg_detail)
+    }
 }
 
 impl InMsgType for u32{
     type MyType = u32;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkU32(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkU32(msg_detail)
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<u32>{
     type MyType = ink_prelude::vec::Vec<u32>;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkU32Array(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkU32Array(msg_detail)
+    }
 }
 
 impl InMsgType for u64{
     type MyType = u64;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkU64(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkU64(msg_detail)
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<u64>{
     type MyType = ink_prelude::vec::Vec<u64>;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkU64Array(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkU64Array(msg_detail)
+    }
 }
 
 impl InMsgType for u128{
     type MyType = u128;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkU128(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkU128(msg_detail)
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<u128>{
     type MyType = ink_prelude::vec::Vec<u128>;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkU128Array(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkU128Array(msg_detail)
+    }
 }
 
 impl InMsgType for i8{
     type MyType = i8;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkI8(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkI8(msg_detail)
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<i8>{
     type MyType = ink_prelude::vec::Vec<i8>;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkI8Array(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkI8Array(msg_detail)
+    }
 }
 
 impl InMsgType for i16{
     type MyType = i16;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkI16(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkI16(msg_detail)
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<i16>{
     type MyType = ink_prelude::vec::Vec<i16>;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkI16Array(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkI16Array(msg_detail)
+    }
 }
 
 impl InMsgType for i32{
     type MyType = i32;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkI32(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkI32(msg_detail)
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<i32>{
     type MyType = ink_prelude::vec::Vec<i32>;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkI32Array(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkI32Array(msg_detail)
+    }
 }
 
 impl InMsgType for i64{
     type MyType = i64;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkI64(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkI64(msg_detail)
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<i64>{
     type MyType = ink_prelude::vec::Vec<i64>;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkI64Array(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkI64Array(msg_detail)
+    }
 }
 
 impl InMsgType for i128{
     type MyType = i128;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkI128(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkI128(msg_detail)
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<i128>{
     type MyType = ink_prelude::vec::Vec<i128>;
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::InkI128Array(val) = type_value.clone() {
             Some(val)
         } else {
             None
         }
     }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkI128Array(msg_detail)
+    }
 }
 
 /// for user data, temporarily reserved
 impl InMsgType for (u8, ink_prelude::vec::Vec<u8>) {
     type MyType = (u8, ink_prelude::vec::Vec<u8>);
-    fn get_value<MyType>(type_value: & MsgDetail) -> Option<Self::MyType> {
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
         if let MsgDetail::UserData(val1, val2) = type_value.clone() {
             Some((val1, val2))
         } else {
             None
         }
+    }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::UserData(msg_detail.0, msg_detail.1)
     }
 }
 
@@ -385,7 +478,7 @@ impl MessageItem {
     }
 
     pub fn in_to<T: scale::Decode + InMsgType>(&self) -> Option<T::MyType>{
-        T::get_value::<T>(&self.tv)
+        T::get_value(&self.tv)
     }
 }
 
