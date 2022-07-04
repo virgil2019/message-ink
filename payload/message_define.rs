@@ -145,15 +145,15 @@ impl ISQoS {
 #[derive(Debug, Clone, Decode, Encode)]
 // #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
 pub struct ISession {
-    pub msg_type: u8,
     pub id: u128,
+    pub callback: Option<ink_prelude::vec::Vec<u8>>,
 }
 
 impl ISession {
-    pub fn new(msg_type: u8, id: u128) -> Self {
+    pub fn new(id: u128, callback: Option<ink_prelude::vec::Vec<u8>>) -> Self {
         Self {
-            msg_type,
             id,
+            callback,
         }
     }
 }
@@ -165,8 +165,8 @@ impl scale_info::TypeInfo for ISession {
         ::scale_info::Type::builder()
                         .path(::scale_info::Path::new("ISession", module_path!()))
                         .composite(::scale_info::build::Fields::named()
-                        .field(|f| f.ty::<u8>().name("msg_type").type_name("u8"))
                         .field(|f| f.ty::<u128>().name("id").type_name("u128"))
+                        .field(|f| f.ty::<ink_prelude::vec::Vec<u8>>().name("callback").type_name("ink_prelude::vec::Vec<u8>"))
                     )
     }
 }
