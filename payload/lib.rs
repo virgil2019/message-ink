@@ -37,14 +37,37 @@ impl ::scale_info::TypeInfo for TestData{
 mod payload {
 
     use ink_storage::traits::{SpreadAllocate};
+    use super::message_protocol::{MsgDetail, InMsgType};
 
     /// for test
     #[derive(Debug, PartialEq, Clone, Eq, scale::Encode, scale::Decode)]
     #[cfg_attr(feature = "std", derive(::scale_info::TypeInfo))]
-    pub struct MessageDetail{
+    pub struct UserMessage{
         name: ink_prelude::string::String,
         age: u32,
         phones: ink_prelude::vec::Vec<ink_prelude::string::String>,
+    }
+
+    /// This is an example to impl `payload::message_protocol::InMsgType` for a user defined struct, 
+    /// such that `MessageDetail` can be read directly through `payload::message_protocol::MessageItem::in_to::<MessageDetail>()`
+    impl InMsgType for UserMessage {
+        type MyType = UserMessage;
+        fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
+            if let MsgDetail::UserData(val) = type_value.clone() {
+                let mut v_ref = val.as_slice();
+                Some(scale::Decode::decode(&mut v_ref).unwrap())
+            } else {
+                None
+            }
+        }
+
+        /// items from traits can only be used if the trait is in scope
+        fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+            let mut v = ink_prelude::vec::Vec::new();
+            scale::Encode::encode_to(&msg_detail, &mut v);
+            
+            MsgDetail::UserData(v)
+        }
     }
 
     /// Defines the storage of your contract.
@@ -227,7 +250,7 @@ mod payload {
                 s = s + "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("22")) {
-                let ss = item.in_to::<(u8, ink_prelude::vec::Vec<u8>)>();
+                let ss = item.in_to::<UserMessage>();
                 s = s + &ink_prelude::format!("{:?}", ss);
                 s = s + "\n";
             }
@@ -272,7 +295,7 @@ mod payload {
         /// test encode and decode
         #[ink::test]
         fn test_encode_decode() {
-            let msg = MessageDetail{
+            let msg = UserMessage{
                 name: "Nika".into(),
                 age: 37,
                 phones: ink_prelude::vec!["123".into(), "456".into()],
@@ -281,7 +304,7 @@ mod payload {
             let mut v: ink_prelude::vec::Vec::<u8> = ink_prelude::vec::Vec::<u8>::new();
             scale::Encode::encode_to(&msg, &mut v);
             let mut vv = v.as_slice();
-            let vout: MessageDetail = scale::Decode::decode(&mut vv).unwrap();
+            let vout: UserMessage = scale::Decode::decode(&mut vv).unwrap();
             println!("{:?}", vout);
             assert_eq!(Some(msg), Some(vout));
         }
