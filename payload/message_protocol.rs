@@ -511,7 +511,7 @@ impl MessagePayload{
     }
 
     /// for `item`
-    pub fn push_item<T: scale::Encode>(&mut self, n: ink_prelude::string::String, tv: MsgDetail) -> bool {
+    pub fn push_item(&mut self, n: ink_prelude::string::String, tv: MsgDetail) -> bool {
         let msg_item = MessageItem::from(n, tv);
         if let Some(item) = &mut self.items {
             if item.contains(&msg_item){
