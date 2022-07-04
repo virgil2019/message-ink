@@ -25,7 +25,7 @@ pub enum MsgDetail{
     InkI32Array(ink_prelude::vec::Vec<i32>),
     InkI64Array(ink_prelude::vec::Vec<i64>),
     InkI128Array(ink_prelude::vec::Vec<i128>),
-    UserData(u8, ink_prelude::vec::Vec<u8>),
+    UserData(ink_prelude::vec::Vec<u8>),
 }
 
 impl ::scale_info::TypeInfo for MsgDetail {
@@ -58,7 +58,8 @@ impl ::scale_info::TypeInfo for MsgDetail {
                                 .variant("InkI32Array", |v| v.index(19).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<i32>>())))
                                 .variant("InkI64Array", |v| v.index(20).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<i64>>())))
                                 .variant("InkI128Array", |v| v.index(21).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<i128>>())))
-                                .variant("UserData", |v| v.index(22).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<u8>()).field(|f| f.ty::<ink_prelude::vec::Vec<u8>>())))
+                                .variant("UserData", |v| v.index(22).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<u8>>())))
+                                //.variant("UserData", |v| v.index(22).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<u8>()).field(|f| f.ty::<ink_prelude::vec::Vec<u8>>())))
                         )
     }
 }
@@ -410,21 +411,7 @@ impl InMsgType for ink_prelude::vec::Vec<i128>{
     }
 }
 
-/// for user data, temporarily reserved
-impl InMsgType for (u8, ink_prelude::vec::Vec<u8>) {
-    type MyType = (u8, ink_prelude::vec::Vec<u8>);
-    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
-        if let MsgDetail::UserData(val1, val2) = type_value.clone() {
-            Some((val1, val2))
-        } else {
-            None
-        }
-    }
-
-    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
-        MsgDetail::UserData(msg_detail.0, msg_detail.1)
-    }
-}
+/// for user data, see `UserMessage` in lib.rs for detail
 
 // impl<T> MsgValueOut for T 
 // where
