@@ -117,6 +117,15 @@ mod payload {
             self.value
         }
 
+        /// encode `UserMessage`
+        #[ink(message)]
+        pub fn encode_um(&self, msg: UserMessage) -> ink_prelude::vec::Vec<u8> {
+            let mut v = ink_prelude::vec::Vec::new();
+            scale::Encode::encode_to(&msg, &mut v);
+
+            v
+        }
+
         /// Test the message Type.
         #[ink(message)]
         pub fn get_message(&self, msg: super::message_protocol::MessagePayload) -> super::message_protocol::MessagePayload {
