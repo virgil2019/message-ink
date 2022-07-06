@@ -362,6 +362,7 @@ impl scale_info::TypeInfo for IContext {
                         .field(|f| f.ty::<ink_prelude::vec::Vec<ISQoS>>().name("sqos").type_name("ink_prelude::vec::Vec<ISQoS>"))
                         .field(|f| f.ty::<[u8;32]>().name("contract").type_name("[u8;32]"))
                         .field(|f| f.ty::<[u8;4]>().name("action").type_name("[u8;4]"))
+                        .field(|f| f.ty::<ISession>().name("session").type_name("ISession"))
                     )
     }
 }
