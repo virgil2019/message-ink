@@ -166,7 +166,7 @@ impl scale_info::TypeInfo for ISession {
                         .path(::scale_info::Path::new("ISession", module_path!()))
                         .composite(::scale_info::build::Fields::named()
                         .field(|f| f.ty::<u128>().name("id").type_name("u128"))
-                        .field(|f| f.ty::<ink_prelude::vec::Vec<u8>>().name("callback").type_name("ink_prelude::vec::Vec<u8>"))
+                        .field(|f| f.ty::<Option<ink_prelude::vec::Vec<u8>>>().name("callback").type_name("Option<ink_prelude::vec::Vec<u8>>"))
                     )
     }
 }
