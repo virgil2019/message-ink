@@ -403,8 +403,8 @@ mod payload {
                 default_act,
                 super::super::ink_prelude::vec![],
                 super::super::message_define::ISession {
-                    msg_type: 3,
                     id: 128,
+                    callback: None,
                 },
             );
 
