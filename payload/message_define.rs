@@ -83,6 +83,7 @@ pub enum ISQoSType{
     Threshold,
     Priority,
     ExceptionRollback,
+    SelectionDelay,
     Anonymous,
     Identity,
     Isolation,
@@ -102,10 +103,11 @@ impl ::scale_info::TypeInfo for ISQoSType {
                                 .variant("Threshold", |v| v.index(2))
                                 .variant("Priority", |v| v.index(3))
                                 .variant("ExceptionRollback", |v| v.index(4))
-                                .variant("Anonymous", |v| v.index(5))
-                                .variant("Identity", |v| v.index(6))
-                                .variant("Isolation", |v| v.index(7))
-                                .variant("CrossVerify", |v| v.index(8))
+                                .variant("SelectionDelay", |v| v.index(5))
+                                .variant("Anonymous", |v| v.index(6))
+                                .variant("Identity", |v| v.index(7))
+                                .variant("Isolation", |v| v.index(8))
+                                .variant("CrossVerify", |v| v.index(9))
                         )
     }
 }
@@ -143,15 +145,15 @@ impl ISQoS {
 #[derive(Debug, Clone, Decode, Encode)]
 // #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
 pub struct ISession {
-    pub msg_type: u8,
     pub id: u128,
+    pub callback: Option<ink_prelude::vec::Vec<u8>>,
 }
 
 impl ISession {
-    pub fn new(msg_type: u8, id: u128) -> Self {
+    pub fn new(id: u128, callback: Option<ink_prelude::vec::Vec<u8>>) -> Self {
         Self {
-            msg_type,
             id,
+            callback,
         }
     }
 }
@@ -163,8 +165,8 @@ impl scale_info::TypeInfo for ISession {
         ::scale_info::Type::builder()
                         .path(::scale_info::Path::new("ISession", module_path!()))
                         .composite(::scale_info::build::Fields::named()
-                        .field(|f| f.ty::<u8>().name("msg_type").type_name("u8"))
                         .field(|f| f.ty::<u128>().name("id").type_name("u128"))
+                        .field(|f| f.ty::<Option<ink_prelude::vec::Vec<u8>>>().name("callback").type_name("Option<ink_prelude::vec::Vec<u8>>"))
                     )
     }
 }
@@ -307,7 +309,7 @@ impl IRequestMessage {
 // #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
 pub struct IResponseMessage {
     pub sqos: ink_prelude::vec::Vec<ISQoS>,
-    pub content: IContent,
+    pub data: ink_prelude::vec::Vec<u8>,
 }
 
 impl scale_info::TypeInfo for IResponseMessage {
@@ -318,16 +320,16 @@ impl scale_info::TypeInfo for IResponseMessage {
                         .path(::scale_info::Path::new("IResponseMessage", module_path!()))
                         .composite(::scale_info::build::Fields::named()
                         .field(|f| f.ty::<ink_prelude::vec::Vec<ISQoS>>().name("sqos").type_name("ink_prelude::vec::Vec<ISQoS>"))
-                        .field(|f| f.ty::<IContent>().name("content").type_name("IContent"))
+                        .field(|f| f.ty::<ink_prelude::vec::Vec<u8>>().name("data").type_name("ink_prelude::vec::Vec<u8>"))
                     )
     }
 }
 
 impl IResponseMessage {
-    pub fn new(sqos: ink_prelude::vec::Vec<ISQoS>, content: IContent) -> Self {
+    pub fn new(sqos: ink_prelude::vec::Vec<ISQoS>, data: ink_prelude::vec::Vec<u8>) -> Self {
         Self {
             sqos,
-            content,
+            data,
         }
     }
 }
@@ -343,6 +345,7 @@ pub struct IContext {
     pub sqos: ink_prelude::vec::Vec<ISQoS>,
     pub contract: [u8;32],
     pub action: [u8;4],
+    pub session: ISession,
 }
 
 impl scale_info::TypeInfo for IContext {
@@ -359,12 +362,14 @@ impl scale_info::TypeInfo for IContext {
                         .field(|f| f.ty::<ink_prelude::vec::Vec<ISQoS>>().name("sqos").type_name("ink_prelude::vec::Vec<ISQoS>"))
                         .field(|f| f.ty::<[u8;32]>().name("contract").type_name("[u8;32]"))
                         .field(|f| f.ty::<[u8;4]>().name("action").type_name("[u8;4]"))
+                        .field(|f| f.ty::<ISession>().name("session").type_name("ISession"))
                     )
     }
 }
 
 impl IContext {
-    pub fn new(id: u128, from_chain: String, sender: String, signer: String, sqos: ink_prelude::vec::Vec<ISQoS>, contract: [u8;32], action: [u8;4]) -> Self {
+    pub fn new(id: u128, from_chain: String, sender: String, signer: String, sqos: ink_prelude::vec::Vec<ISQoS>,
+            contract: [u8;32], action: [u8;4], session: ISession) -> Self {
         Self {
             id,
             from_chain,
@@ -373,6 +378,7 @@ impl IContext {
             sqos,
             contract,
             action,
+            session,
         }
     }
 }
