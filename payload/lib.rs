@@ -126,6 +126,11 @@ mod payload {
             v
         }
 
+        #[ink(message)]
+        pub fn get_inkaddressdata(&self, msg: super::message_protocol::InkAddressData) ->super::message_protocol::InkAddressData {
+            msg
+        }
+
         /// Test the message Type.
         #[ink(message)]
         pub fn get_message(&self, msg: super::message_protocol::MessagePayload) -> super::message_protocol::MessagePayload {
@@ -259,6 +264,11 @@ mod payload {
                 s = s + "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("22")) {
+                let ss = item.in_to::<super::message_protocol::InkAddressData>();
+                s = s + &ink_prelude::format!("{:?}", ss);
+                s = s + "\n";
+            }
+            if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("23")) {
                 let ss = item.in_to::<UserMessage>();
                 s = s + &ink_prelude::format!("{:?}", ss);
                 s = s + "\n";
@@ -403,8 +413,8 @@ mod payload {
                 default_act,
                 super::super::ink_prelude::vec![],
                 super::super::message_define::ISession {
-                    msg_type: 3,
                     id: 128,
+                    callback: None,
                 },
             );
 

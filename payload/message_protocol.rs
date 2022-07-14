@@ -1,5 +1,24 @@
 /// Message element type define
-/// U64, I64, U128, I128 will be decoded as `InkString`
+/// Address needs to be 
+#[derive(Debug, PartialEq, Eq, scale::Encode, scale::Decode, Clone)]
+pub struct InkAddressData {
+    pub ink_address: Option<ink_prelude::vec::Vec<u8>>,
+    pub general_address: Option<ink_prelude::string::String>,
+}
+
+impl ::scale_info::TypeInfo for InkAddressData {
+    type Identity = Self;
+
+    fn type_info() -> ::scale_info::Type {
+        ::scale_info::Type::builder()
+                        .path(::scale_info::Path::new("InkAddressData", module_path!()))
+                        .composite(::scale_info::build::Fields::named()
+                        .field(|f| f.ty::<Option<ink_prelude::vec::Vec<u8>>>().name("ink_address").type_name("Option<ink_prelude::vec::Vec<u8>>"))
+                        .field(|f| f.ty::<Option<ink_prelude::string::String>>().name("general_address").type_name("Option<ink_prelude::string::String>"))
+                    )
+    }
+}
+
 #[derive(Debug, PartialEq, Eq, scale::Encode, scale::Decode, Clone)]
 // #[cfg_attr(feature = "std", derive())]
 pub enum MsgDetail{
@@ -25,6 +44,7 @@ pub enum MsgDetail{
     InkI32Array(ink_prelude::vec::Vec<i32>),
     InkI64Array(ink_prelude::vec::Vec<i64>),
     InkI128Array(ink_prelude::vec::Vec<i128>),
+    InkAddress(InkAddressData),
     UserData(ink_prelude::vec::Vec<u8>),
 }
 
@@ -58,7 +78,8 @@ impl ::scale_info::TypeInfo for MsgDetail {
                                 .variant("InkI32Array", |v| v.index(19).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<i32>>())))
                                 .variant("InkI64Array", |v| v.index(20).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<i64>>())))
                                 .variant("InkI128Array", |v| v.index(21).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<i128>>())))
-                                .variant("UserData", |v| v.index(22).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<u8>>())))
+                                .variant("InkAddress", |v| v.index(22).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<InkAddressData>())))
+                                .variant("UserData", |v| v.index(23).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<ink_prelude::vec::Vec<u8>>())))
                                 //.variant("UserData", |v| v.index(22).fields(::scale_info::build::Fields::unnamed().field(|f| f.ty::<u8>()).field(|f| f.ty::<ink_prelude::vec::Vec<u8>>())))
                         )
     }
@@ -408,6 +429,21 @@ impl InMsgType for ink_prelude::vec::Vec<i128>{
 
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkI128Array(msg_detail)
+    }
+}
+
+impl InMsgType for InkAddressData {
+    type MyType = InkAddressData;
+    fn get_value(type_value: & MsgDetail) -> Option<Self::MyType> {
+        if let MsgDetail::InkAddress(val) = type_value.clone() {
+            Some(val)
+        } else {
+            None
+        }
+    }
+
+    fn create_message(msg_detail: Self::MyType) -> MsgDetail {
+        MsgDetail::InkAddress(msg_detail)
     }
 }
 
