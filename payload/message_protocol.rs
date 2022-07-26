@@ -2,7 +2,7 @@
 /// Address needs to be 
 #[derive(Debug, PartialEq, Eq, scale::Encode, scale::Decode, Clone)]
 pub struct InkAddressData {
-    pub ink_address: Option<ink_prelude::vec::Vec<u8>>,
+    pub ink_address: Option<[u8; 32]>,
     pub general_address: Option<ink_prelude::string::String>,
     pub address_type: u8,
 }
@@ -14,7 +14,7 @@ impl ::scale_info::TypeInfo for InkAddressData {
         ::scale_info::Type::builder()
                         .path(::scale_info::Path::new("InkAddressData", module_path!()))
                         .composite(::scale_info::build::Fields::named()
-                        .field(|f| f.ty::<Option<ink_prelude::vec::Vec<u8>>>().name("ink_address").type_name("Option<ink_prelude::vec::Vec<u8>>"))
+                        .field(|f| f.ty::<Option<[u8; 32]>>().name("ink_address").type_name("Option<[u8; 32]>"))
                         .field(|f| f.ty::<Option<ink_prelude::string::String>>().name("general_address").type_name("Option<ink_prelude::string::String>"))
                         .field(|f| f.ty::<u8>().name("address_type").type_name("u8"))
                     )
