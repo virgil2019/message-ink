@@ -228,9 +228,9 @@ impl IReceivedMessage {
         msg_code
     }
 
-    pub fn into_hash(&self) -> <ink_env::hash::Sha2x256 as ink_env::hash::HashOutput>::Type {
-        let mut output = <ink_env::hash::Sha2x256 as ink_env::hash::HashOutput>::Type::default();
-        ink_env::hash_encoded::<ink_env::hash::Sha2x256, _>(&self, &mut output);
+    pub fn into_hash<T: ink_env::hash::HashOutput+ink_env::hash::CryptoHash>(&self) -> <T as ink_env::hash::HashOutput>::Type {
+        let mut output = <T as ink_env::hash::HashOutput>::Type::default();
+        ink_env::hash_encoded::<T, _>(&self, &mut output);
         output
     }
 }

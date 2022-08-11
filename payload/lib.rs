@@ -422,10 +422,10 @@ mod payload {
             // let input: &[u8] = &[13, 14, 15];
             // `output1` is the type of `[u8;32]`
             // let mut output1 = <Sha2x256 as HashOutput>::Type::default(); // 256-bit buffer
-            let output1  = recv_msg.into_hash();
+            let output1  = recv_msg.into_hash::<ink_env::hash::Sha2x256>();
 
             // let mut output2 = <Sha2x256 as HashOutput>::Type::default(); // 256-bit buffer
-            let output2  = recv_msg.into_hash();
+            let output2  = recv_msg.into_hash::<ink_env::hash::Sha2x256>();
 
             // let hash = ink_env::hash_bytes(input: &[u8], output: &mut <H as HashOutput>::Type)
             // assert_eq!(hash, ());
