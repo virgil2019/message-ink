@@ -68,6 +68,10 @@ mod payload {
             
             MsgDetail::UserData(v)
         }
+
+        fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+            ink_prelude::vec![]
+        }
     }
 
     /// Defines the storage of your contract.
@@ -276,6 +280,12 @@ mod payload {
 
             s
         }
+
+        /// User defined behaviors when messages or invocations are received from other chains
+        #[ink(message)]
+        pub fn test_raw_data(&self, m_payload: super::message_protocol::MessagePayload) ->ink_prelude::vec::Vec<u8>{
+            m_payload.into_raw_data()
+        }
     }
 
     /// Unit tests in Rust are normally defined within such a `#[cfg(test)]`
@@ -430,6 +440,19 @@ mod payload {
             // let hash = ink_env::hash_bytes(input: &[u8], output: &mut <H as HashOutput>::Type)
             // assert_eq!(hash, ());
             assert_eq!(output1, output2);
+        }
+
+        #[ink::test]
+        fn test_crypto_payload() {
+            let address_here = super::super::message_protocol::InkAddressData {
+                ink_address: ink_prelude::vec![1, 2, 3],
+                address_type: 0
+            };
+
+            let raw1 = address_here.into_raw_data();
+            let raw2 = address_here.into_raw_data();
+
+            assert_eq!(raw1, raw2);
         }
     }
 }

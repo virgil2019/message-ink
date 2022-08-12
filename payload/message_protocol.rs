@@ -1,9 +1,31 @@
 /// Message element type define
 /// Address needs to be 
+// #[derive(Debug, PartialEq, Eq, scale::Encode, scale::Decode, Clone)]
+// pub struct InkAddressData {
+//     pub ink_address: Option<[u8; 32]>,
+//     pub general_address: Option<ink_prelude::string::String>,
+//     pub address_type: u8,
+// }
+
+// impl ::scale_info::TypeInfo for InkAddressData {
+//     type Identity = Self;
+
+//     fn type_info() -> ::scale_info::Type {
+//         ::scale_info::Type::builder()
+//                         .path(::scale_info::Path::new("InkAddressData", module_path!()))
+//                         .composite(::scale_info::build::Fields::named()
+//                         .field(|f| f.ty::<Option<[u8; 32]>>().name("ink_address").type_name("Option<[u8; 32]>"))
+//                         .field(|f| f.ty::<Option<ink_prelude::string::String>>().name("general_address").type_name("Option<ink_prelude::string::String>"))
+//                         .field(|f| f.ty::<u8>().name("address_type").type_name("u8"))
+//                     )
+//     }
+// }
+
+/// Message element type define
+/// Fro crypto purposes
 #[derive(Debug, PartialEq, Eq, scale::Encode, scale::Decode, Clone)]
 pub struct InkAddressData {
-    pub ink_address: Option<[u8; 32]>,
-    pub general_address: Option<ink_prelude::string::String>,
+    pub ink_address: ink_prelude::vec::Vec<u8>,
     pub address_type: u8,
 }
 
@@ -14,8 +36,7 @@ impl ::scale_info::TypeInfo for InkAddressData {
         ::scale_info::Type::builder()
                         .path(::scale_info::Path::new("InkAddressData", module_path!()))
                         .composite(::scale_info::build::Fields::named()
-                        .field(|f| f.ty::<Option<[u8; 32]>>().name("ink_address").type_name("Option<[u8; 32]>"))
-                        .field(|f| f.ty::<Option<ink_prelude::string::String>>().name("general_address").type_name("Option<ink_prelude::string::String>"))
+                        .field(|f| f.ty::<ink_prelude::vec::Vec<u8>>().name("ink_address").type_name("ink_prelude::vec::Vec<u8>"))
                         .field(|f| f.ty::<u8>().name("address_type").type_name("u8"))
                     )
     }
@@ -100,6 +121,7 @@ pub trait InMsgType {
     type MyType;
     fn get_value(type_value: & MsgDetail) -> Option<Self::MyType>;
     fn create_message(msg_detail: Self::MyType) -> MsgDetail;
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8>;
 }
 
 /// enum variants are not `types`, we cannot generic more!
@@ -117,6 +139,10 @@ impl InMsgType for ink_prelude::string::String{
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkString(msg_detail)
     }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        ink_prelude::vec::Vec::from(self.as_bytes())
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<ink_prelude::string::String>{
@@ -131,6 +157,15 @@ impl InMsgType for ink_prelude::vec::Vec<ink_prelude::string::String>{
 
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkStringArray(msg_detail)
+    }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        let mut raw_string_vec = ink_prelude::vec![];
+        for ele in self.iter() {
+            raw_string_vec.append(&mut ink_prelude::vec::Vec::from(ele.as_bytes()));
+        }
+
+        raw_string_vec
     }
 }
 
@@ -147,6 +182,10 @@ impl InMsgType for u8{
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkU8(msg_detail)
     }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        ink_prelude::vec![*self]
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<u8>{
@@ -161,6 +200,10 @@ impl InMsgType for ink_prelude::vec::Vec<u8>{
 
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkU8Array(msg_detail)
+    }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        self.clone()
     }
 }
 
@@ -177,6 +220,10 @@ impl InMsgType for u16{
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkU16(msg_detail)
     }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        ink_prelude::vec::Vec::from(self.to_be_bytes())
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<u16>{
@@ -191,6 +238,16 @@ impl InMsgType for ink_prelude::vec::Vec<u16>{
 
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkU16Array(msg_detail)
+    }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        let mut number_data = ink_prelude::vec![];
+
+        for ele in self.iter() {
+            number_data.append(&mut ink_prelude::vec::Vec::from(ele.to_be_bytes()))
+        }
+
+        number_data
     }
 }
 
@@ -207,6 +264,10 @@ impl InMsgType for u32{
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkU32(msg_detail)
     }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        ink_prelude::vec::Vec::from(self.to_be_bytes())
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<u32>{
@@ -221,6 +282,16 @@ impl InMsgType for ink_prelude::vec::Vec<u32>{
 
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkU32Array(msg_detail)
+    }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        let mut number_data = ink_prelude::vec![];
+
+        for ele in self.iter() {
+            number_data.append(&mut ink_prelude::vec::Vec::from(ele.to_be_bytes()))
+        }
+
+        number_data
     }
 }
 
@@ -237,6 +308,10 @@ impl InMsgType for u64{
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkU64(msg_detail)
     }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        ink_prelude::vec::Vec::from(self.to_be_bytes())
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<u64>{
@@ -251,6 +326,16 @@ impl InMsgType for ink_prelude::vec::Vec<u64>{
 
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkU64Array(msg_detail)
+    }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        let mut number_data = ink_prelude::vec![];
+
+        for ele in self.iter() {
+            number_data.append(&mut ink_prelude::vec::Vec::from(ele.to_be_bytes()))
+        }
+
+        number_data
     }
 }
 
@@ -267,6 +352,10 @@ impl InMsgType for u128{
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkU128(msg_detail)
     }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        ink_prelude::vec::Vec::from(self.to_be_bytes())
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<u128>{
@@ -281,6 +370,16 @@ impl InMsgType for ink_prelude::vec::Vec<u128>{
 
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkU128Array(msg_detail)
+    }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        let mut number_data = ink_prelude::vec![];
+
+        for ele in self.iter() {
+            number_data.append(&mut ink_prelude::vec::Vec::from(ele.to_be_bytes()))
+        }
+
+        number_data
     }
 }
 
@@ -297,6 +396,10 @@ impl InMsgType for i8{
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkI8(msg_detail)
     }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        ink_prelude::vec![*self as u8]
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<i8>{
@@ -311,6 +414,16 @@ impl InMsgType for ink_prelude::vec::Vec<i8>{
 
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkI8Array(msg_detail)
+    }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        let mut number_data = ink_prelude::vec![];
+
+        for ele in self.iter() {
+            number_data.append(&mut ink_prelude::vec![*ele as u8])
+        }
+
+        number_data
     }
 }
 
@@ -327,6 +440,10 @@ impl InMsgType for i16{
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkI16(msg_detail)
     }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        ink_prelude::vec::Vec::from(self.to_be_bytes())
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<i16>{
@@ -341,6 +458,16 @@ impl InMsgType for ink_prelude::vec::Vec<i16>{
 
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkI16Array(msg_detail)
+    }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        let mut number_data = ink_prelude::vec![];
+
+        for ele in self.iter() {
+            number_data.append(&mut ink_prelude::vec::Vec::from(ele.to_be_bytes()))
+        }
+
+        number_data
     }
 }
 
@@ -357,6 +484,10 @@ impl InMsgType for i32{
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkI32(msg_detail)
     }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        ink_prelude::vec::Vec::from(self.to_be_bytes())
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<i32>{
@@ -371,6 +502,16 @@ impl InMsgType for ink_prelude::vec::Vec<i32>{
 
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkI32Array(msg_detail)
+    }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        let mut number_data = ink_prelude::vec![];
+
+        for ele in self.iter() {
+            number_data.append(&mut ink_prelude::vec::Vec::from(ele.to_be_bytes()))
+        }
+
+        number_data
     }
 }
 
@@ -387,6 +528,10 @@ impl InMsgType for i64{
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkI64(msg_detail)
     }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        ink_prelude::vec::Vec::from(self.to_be_bytes())
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<i64>{
@@ -401,6 +546,16 @@ impl InMsgType for ink_prelude::vec::Vec<i64>{
 
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkI64Array(msg_detail)
+    }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        let mut number_data = ink_prelude::vec![];
+
+        for ele in self.iter() {
+            number_data.append(&mut ink_prelude::vec::Vec::from(ele.to_be_bytes()))
+        }
+
+        number_data
     }
 }
 
@@ -417,6 +572,10 @@ impl InMsgType for i128{
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkI128(msg_detail)
     }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        ink_prelude::vec::Vec::from(self.to_be_bytes())
+    }
 }
 
 impl InMsgType for ink_prelude::vec::Vec<i128>{
@@ -432,6 +591,16 @@ impl InMsgType for ink_prelude::vec::Vec<i128>{
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkI128Array(msg_detail)
     }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        let mut number_data = ink_prelude::vec![];
+
+        for ele in self.iter() {
+            number_data.append(&mut ink_prelude::vec::Vec::from(ele.to_be_bytes()))
+        }
+
+        number_data
+    }
 }
 
 impl InMsgType for InkAddressData {
@@ -446,6 +615,10 @@ impl InMsgType for InkAddressData {
 
     fn create_message(msg_detail: Self::MyType) -> MsgDetail {
         MsgDetail::InkAddress(msg_detail)
+    }
+
+    fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        self.ink_address.clone()
     }
 }
 
@@ -504,6 +677,35 @@ impl MessageItem {
 
     pub fn in_to<T: scale::Decode + InMsgType>(&self) -> Option<T::MyType>{
         T::get_value(&self.tv)
+    }
+
+    pub fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        match self.tv.clone() {
+            MsgDetail::InkString(val) => val.into_raw_data(),
+            MsgDetail::InkU8(val) => val.into_raw_data(),
+            MsgDetail::InkU16(val) => val.into_raw_data(),
+            MsgDetail::InkU32(val) => val.into_raw_data(),
+            MsgDetail::InkU64(val) => val.into_raw_data(),
+            MsgDetail::InkU128(val) => val.into_raw_data(),
+            MsgDetail::InkI8(val) => val.into_raw_data(),
+            MsgDetail::InkI16(val) => val.into_raw_data(),
+            MsgDetail::InkI32(val) => val.into_raw_data(),
+            MsgDetail::InkI64(val) => val.into_raw_data(),
+            MsgDetail::InkI128(val) => val.into_raw_data(),
+            MsgDetail::InkStringArray(val) => val.into_raw_data(),
+            MsgDetail::InkU8Array(val) => val.into_raw_data(),
+            MsgDetail::InkU16Array(val) => val.into_raw_data(),
+            MsgDetail::InkU32Array(val) => val.into_raw_data(),
+            MsgDetail::InkU64Array(val) => val.into_raw_data(),
+            MsgDetail::InkU128Array(val) => val.into_raw_data(),
+            MsgDetail::InkI8Array(val) => val.into_raw_data(),
+            MsgDetail::InkI16Array(val) => val.into_raw_data(),
+            MsgDetail::InkI32Array(val) => val.into_raw_data(),
+            MsgDetail::InkI64Array(val) => val.into_raw_data(),
+            MsgDetail::InkI128Array(val) => val.into_raw_data(),
+            MsgDetail::InkAddress(val) => val.into_raw_data(),
+            MsgDetail::UserData(_) => ink_prelude::vec![],
+        }
     }
 }
 
@@ -569,6 +771,18 @@ impl MessagePayload{
         let mut pl_code: ink_prelude::vec::Vec<u8> = ink_prelude::vec::Vec::<u8>::new();
         scale::Encode::encode_to(self, &mut pl_code);
         pl_code
+    }
+
+    pub fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        let mut raw_data = ink_prelude::vec![];
+
+        if let Some(item) = &self.items {
+            for ele in item.iter() {
+                raw_data.append(&mut ele.into_raw_data())
+            }
+        }
+
+        raw_data
     }
 }
 
