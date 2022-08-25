@@ -415,14 +415,15 @@ mod payload {
                 18,
                 default_str.clone(),
                 default_str.clone(),
-                default_str.clone(),
+                ink_prelude::vec![],
+                ink_prelude::vec![],
                 ink_prelude::vec![],
                 default_num,
                 default_act,
                 ink_prelude::vec![],
                 super::super::message_define::ISession {
                     id: 128,
-                    callback: None,
+                    callback: crate::ink_prelude::vec![],
                 },
             );
 
@@ -451,6 +452,68 @@ mod payload {
             let raw2 = address_here.into_raw_data();
 
             assert_eq!(raw1, raw2);
+        }
+
+        /// test raw data of received message
+        #[ink::test]
+        fn test_raw_data_received() {
+            let accounts = ink_env::test::default_accounts::<ink_env::DefaultEnvironment>();
+            let default_num: [u8;32] = [0; 32];
+            let default_act: [u8;4] = [0;4];
+            let mut msg_payload = crate::message_protocol::MessagePayload::new();
+            msg_payload.push_item(String::try_from("greeting").unwrap(), MsgDetail::InkString("asdf".to_string()));
+            let data = msg_payload.to_bytes();
+            let alice: [u8; 32] = *accounts.alice.as_ref();
+            let recv_msg = super::super::message_define::IReceivedMessage::new(
+                1,
+                "POLKADOT".to_string(),
+                "POLKADOT".to_string(),
+                ink_prelude::vec::Vec::from(alice),
+                ink_prelude::vec::Vec::from(alice),
+                ink_prelude::vec![],
+                default_num,
+                default_act,
+                data,
+                super::super::message_define::ISession {
+                    id: 0,
+                    callback: crate::ink_prelude::vec![],
+                },
+            );
+            
+            let b = recv_msg.into_raw_data();
+            println!("{:?}", b);
+        }
+        
+        /// test raw data of sent message
+        #[ink::test]
+        fn test_raw_data_sent() {
+            let accounts = ink_env::test::default_accounts::<ink_env::DefaultEnvironment>();
+            let default_num: [u8;32] = [0; 32];
+            let default_act: [u8;4] = [0;4];
+            let mut msg_payload = crate::message_protocol::MessagePayload::new();
+            msg_payload.push_item(String::try_from("greeting").unwrap(), MsgDetail::InkString("asdf".to_string()));
+            let data = msg_payload.to_bytes();
+            let alice: [u8; 32] = *accounts.alice.as_ref();
+            let recv_msg = super::super::message_define::IReceivedMessage::new(
+                1,
+                "POLKADOT".to_string(),
+                "POLKADOT".to_string(),
+                ink_prelude::vec::Vec::from(alice),
+                ink_prelude::vec::Vec::from(alice),
+                ink_prelude::vec![],
+                default_num,
+                default_act,
+                data,
+                super::super::message_define::ISession {
+                    id: 0,
+                    callback: crate::ink_prelude::vec![],
+                },
+            );
+
+            println!("{:?}", ink_prelude::vec::Vec::from(alice));
+            
+            let b = recv_msg.into_raw_data();
+            println!("{:?}", b);
         }
     }
 }

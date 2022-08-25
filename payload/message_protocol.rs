@@ -681,7 +681,11 @@ impl MessageItem {
 
     pub fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
         let mut raw_data = ink_prelude::vec![];
+
+        // encode `n`
+        raw_data.append(& mut ink_prelude::vec::Vec::from(self.n.as_bytes()));
         
+        // encode `tv`
         let mut val_data = match self.tv.clone() {
             MsgDetail::InkString(val) => val.into_raw_data(),
             MsgDetail::InkU8(val) => val.into_raw_data(),
