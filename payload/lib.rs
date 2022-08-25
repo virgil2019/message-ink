@@ -515,5 +515,15 @@ mod payload {
             let b = recv_msg.into_raw_data();
             println!("{:?}", b);
         }
+
+        /// test raw data of SQoS
+        #[ink::test]
+        fn test_raw_data_sqos() {
+            let sqos1 = super::super::message_define::ISQoS::new(super::super::message_define::ISQoSType::Isolation, Some(ink_prelude::vec![1, 2]));
+            let sqos2 = super::super::message_define::ISQoS::new(super::super::message_define::ISQoSType::Isolation, None);
+
+            assert_eq!(sqos1.into_raw_data(), ink_prelude::vec![8, 1, 2], "sqos1 `into_raw_data error!`");
+            assert_eq!(sqos2.into_raw_data(), ink_prelude::vec![8]);
+        }
     }
 }
