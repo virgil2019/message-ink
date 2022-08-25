@@ -53,9 +53,9 @@ pub struct IContent {
 impl IContent {
     pub fn new(contract: String, action: String, data: ink_prelude::vec::Vec<u8>) -> Self {
         Self {
-            contract: contract,
-            action: action,
-            data: data,
+            contract,
+            action,
+            data,
         }
     }
 }
