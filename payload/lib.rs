@@ -9,8 +9,6 @@ pub use self::payload::{
 };
 
 use ink_lang as ink;
-use ink_prelude;
-
 
 /// This is an example that shows how can user-defined struct be used for other contracts as parameter in `message` interface
 #[derive(Debug, PartialEq, Eq, scale::Encode, scale::Decode, Clone)]
@@ -69,7 +67,7 @@ mod payload {
             MsgDetail::UserData(v)
         }
 
-        fn into_raw_data(&self) -> ink_prelude::vec::Vec<u8> {
+        fn into_raw_data(self) -> ink_prelude::vec::Vec<u8> {
             ink_prelude::vec![]
         }
     }
@@ -153,7 +151,7 @@ mod payload {
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("0")) {
                 let ss = item.in_to::<ink_prelude::string::String>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("1")) {
                 // This is for test, and use `if let` is better
@@ -170,112 +168,112 @@ mod payload {
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("2")) {
                 let ss = item.in_to::<u16>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("3")) {
                 let ss = item.in_to::<u32>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("4")) {
                 let ss = item.in_to::<u64>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("5")) {
                 let ss = item.in_to::<u128>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("6")) {
                 let ss = item.in_to::<i8>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("7")) {
                 let ss = item.in_to::<i16>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("8")) {
                 let ss = item.in_to::<i32>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("9")) {
                 let ss = item.in_to::<i64>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("10")) {
                 let ss = item.in_to::<i128>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("11")) {
                 let ss = item.in_to::<ink_prelude::vec::Vec<ink_prelude::string::String>>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("12")) {
                 let ss = item.in_to::<ink_prelude::vec::Vec<u8>>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("13")) {
                 let ss = item.in_to::<ink_prelude::vec::Vec<u16>>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("14")) {
                 let ss = item.in_to::<ink_prelude::vec::Vec<u32>>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("15")) {
                 let ss = item.in_to::<ink_prelude::vec::Vec<u64>>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("16")) {
                 let ss = item.in_to::<ink_prelude::vec::Vec<u128>>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("17")) {
                 let ss = item.in_to::<ink_prelude::vec::Vec<i8>>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("18")) {
                 let ss = item.in_to::<ink_prelude::vec::Vec<i16>>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("19")) {
                 let ss = item.in_to::<ink_prelude::vec::Vec<i32>>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("20")) {
                 let ss = item.in_to::<ink_prelude::vec::Vec<i64>>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("21")) {
                 let ss = item.in_to::<ink_prelude::vec::Vec<i128>>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("22")) {
                 let ss = item.in_to::<super::message_protocol::InkAddressData>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
             if let Some(item) = m_payload.get_item(ink_prelude::string::String::from("23")) {
                 let ss = item.in_to::<UserMessage>();
                 s = s + &ink_prelude::format!("{:?}", ss);
-                s = s + "\n";
+                s += "\n";
             }
 
             s
@@ -422,13 +420,13 @@ mod payload {
                 ink_prelude::vec![],
                 default_num,
                 default_act,
-                super::super::ink_prelude::vec![],
+                ink_prelude::vec![],
                 super::super::message_define::ISession {
                     id: 128,
                     sessionType: 0,
-                    callback: crate::ink_prelude::vec![],
-                    commitment: crate::ink_prelude::vec![],
-                    answer: crate::ink_prelude::vec![],
+                    callback: ink_prelude::vec![],
+                    commitment: ink_prelude::vec![],
+                    answer: ink_prelude::vec![],
                 },
             );
 
@@ -453,7 +451,7 @@ mod payload {
                 address_type: 0
             };
 
-            let raw1 = address_here.into_raw_data();
+            let raw1 = address_here.clone().into_raw_data();
             let raw2 = address_here.into_raw_data();
 
             assert_eq!(raw1, raw2);
@@ -482,9 +480,9 @@ mod payload {
                 super::super::message_define::ISession {
                     id: 0,
                     sessionType: 0,
-                    callback: crate::ink_prelude::vec![],
-                    commitment: crate::ink_prelude::vec![],
-                    answer: crate::ink_prelude::vec![],
+                    callback: ink_prelude::vec![],
+                    commitment: ink_prelude::vec![],
+                    answer: ink_prelude::vec![],
                 },
             );
             
@@ -515,9 +513,9 @@ mod payload {
                 super::super::message_define::ISession {
                     id: 0,
                     sessionType: 0,
-                    callback: crate::ink_prelude::vec![],
-                    commitment: crate::ink_prelude::vec![],
-                    answer: crate::ink_prelude::vec![],
+                    callback: ink_prelude::vec![],
+                    commitment: ink_prelude::vec![],
+                    answer: ink_prelude::vec![],
                 },
             );
 
@@ -525,6 +523,16 @@ mod payload {
             
             let b = recv_msg.into_raw_data();
             println!("{:?}", b);
+        }
+
+        /// test raw data of SQoS
+        #[ink::test]
+        fn test_raw_data_sqos() {
+            let sqos1 = super::super::message_define::ISQoS::new(super::super::message_define::ISQoSType::Isolation, Some(ink_prelude::vec![1, 2]));
+            let sqos2 = super::super::message_define::ISQoS::new(super::super::message_define::ISQoSType::Isolation, None);
+
+            assert_eq!(sqos1.into_raw_data(), ink_prelude::vec![8, 1, 2], "sqos1 `into_raw_data error!`");
+            assert_eq!(sqos2.into_raw_data(), ink_prelude::vec![8]);
         }
     }
 }

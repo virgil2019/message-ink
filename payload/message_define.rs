@@ -55,9 +55,9 @@ pub struct IContent {
 impl IContent {
     pub fn new(contract: ink_prelude::vec::Vec<u8>, action: ink_prelude::vec::Vec<u8>, data: ink_prelude::vec::Vec<u8>) -> Self {
         Self {
-            contract: contract,
-            action: action,
-            data: data,
+            contract,
+            action,
+            data,
         }
     }
 }
@@ -159,7 +159,8 @@ impl ISQoS {
         };
 
         raw_buffer.append(&mut ink_prelude::vec::Vec::from(t_u8.to_be_bytes()));
-        raw_buffer.append(&mut self.v.clone().unwrap_or(ink_prelude::vec![]));
+        // raw_buffer.append(&mut self.v.clone().unwrap_or_else(ink_prelude::vec::Vec::new));
+        raw_buffer.append(&mut self.v.clone().unwrap_or_default());
 
         raw_buffer
     }
