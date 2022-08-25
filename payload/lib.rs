@@ -425,7 +425,10 @@ mod payload {
                 super::super::ink_prelude::vec![],
                 super::super::message_define::ISession {
                     id: 128,
+                    sessionType: 0,
                     callback: crate::ink_prelude::vec![],
+                    commitment: crate::ink_prelude::vec![],
+                    answer: crate::ink_prelude::vec![],
                 },
             );
 
@@ -478,7 +481,10 @@ mod payload {
                 data,
                 super::super::message_define::ISession {
                     id: 0,
+                    sessionType: 0,
                     callback: crate::ink_prelude::vec![],
+                    commitment: crate::ink_prelude::vec![],
+                    answer: crate::ink_prelude::vec![],
                 },
             );
             
@@ -508,7 +514,10 @@ mod payload {
                 data,
                 super::super::message_define::ISession {
                     id: 0,
+                    sessionType: 0,
                     callback: crate::ink_prelude::vec![],
+                    commitment: crate::ink_prelude::vec![],
+                    answer: crate::ink_prelude::vec![],
                 },
             );
 
