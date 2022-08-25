@@ -171,18 +171,18 @@ impl ISQoS {
 // #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
 pub struct ISession {
     pub id: u128,
-    pub sessionType: u8,
+    pub session_type: u8,
     pub callback: ink_prelude::vec::Vec<u8>,
     pub commitment: ink_prelude::vec::Vec<u8>,
     pub answer: ink_prelude::vec::Vec<u8>,
 }
 
 impl ISession {
-    pub fn new(id: u128, sessionType: u8, callback: ink_prelude::vec::Vec<u8>,
+    pub fn new(id: u128, session_type: u8, callback: ink_prelude::vec::Vec<u8>,
             commitment: ink_prelude::vec::Vec<u8>, answer: ink_prelude::vec::Vec<u8>) -> Self {
         Self {
             id,
-            sessionType,
+            session_type,
             callback,
             commitment,
             answer,
@@ -193,7 +193,7 @@ impl ISession {
         let mut raw_buffer = ink_prelude::vec![];
 
         raw_buffer.append(&mut ink_prelude::vec::Vec::from(self.id.to_be_bytes()));
-        raw_buffer.append(&mut ink_prelude::vec::Vec::from(self.sessionType.to_be_bytes()));
+        raw_buffer.append(&mut ink_prelude::vec::Vec::from(self.session_type.to_be_bytes()));
         raw_buffer.append(&mut self.callback.clone());
         raw_buffer.append(&mut self.commitment.clone());
         raw_buffer.append(&mut self.answer.clone());
@@ -210,7 +210,7 @@ impl scale_info::TypeInfo for ISession {
                         .path(::scale_info::Path::new("ISession", module_path!()))
                         .composite(::scale_info::build::Fields::named()
                         .field(|f| f.ty::<u128>().name("id").type_name("u128"))
-                        .field(|f| f.ty::<u8>().name("sessionType").type_name("u8"))
+                        .field(|f| f.ty::<u8>().name("session_type").type_name("u8"))
                         .field(|f| f.ty::<ink_prelude::vec::Vec<u8>>().name("callback").type_name("ink_prelude::vec::Vec<u8>"))
                         .field(|f| f.ty::<ink_prelude::vec::Vec<u8>>().name("commitment").type_name("ink_prelude::vec::Vec<u8>"))
                         .field(|f| f.ty::<ink_prelude::vec::Vec<u8>>().name("answer").type_name("ink_prelude::vec::Vec<u8>"))

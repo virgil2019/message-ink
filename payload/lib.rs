@@ -423,7 +423,7 @@ mod payload {
                 ink_prelude::vec![],
                 super::super::message_define::ISession {
                     id: 128,
-                    sessionType: 0,
+                    session_type: 0,
                     callback: ink_prelude::vec![],
                     commitment: ink_prelude::vec![],
                     answer: ink_prelude::vec![],
@@ -479,7 +479,7 @@ mod payload {
                 data,
                 super::super::message_define::ISession {
                     id: 0,
-                    sessionType: 0,
+                    session_type: 0,
                     callback: ink_prelude::vec![],
                     commitment: ink_prelude::vec![],
                     answer: ink_prelude::vec![],
@@ -512,7 +512,7 @@ mod payload {
                 data,
                 super::super::message_define::ISession {
                     id: 0,
-                    sessionType: 0,
+                    session_type: 0,
                     callback: ink_prelude::vec![],
                     commitment: ink_prelude::vec![],
                     answer: ink_prelude::vec![],
