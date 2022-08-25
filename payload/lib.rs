@@ -461,61 +461,69 @@ mod payload {
         #[ink::test]
         fn test_raw_data_received() {
             let accounts = ink_env::test::default_accounts::<ink_env::DefaultEnvironment>();
-            let default_num: [u8;32] = [0; 32];
-            let default_act: [u8;4] = [0;4];
+            let mut default_num: [u8;32] = [0; 32];
+            default_num[31] = 0x34;
+            default_num[30] = 0x12;
+            let default_act: [u8;4] = [0x12, 0x34, 0x56, 0x78];
             let mut msg_payload = crate::message_protocol::MessagePayload::new();
             msg_payload.push_item(String::try_from("greeting").unwrap(), MsgDetail::InkString("asdf".to_string()));
             let data = msg_payload.to_bytes();
             let alice: [u8; 32] = *accounts.alice.as_ref();
+            let mut sqos: Vec<crate::message_define::ISQoS> = ink_prelude::vec![];
+            sqos.push(crate::message_define::ISQoS::new(crate::message_define::ISQoSType::SelectionDelay, Vec::<u8>::from([0x12, 0x34, 0x56, 0x78])));
             let recv_msg = super::super::message_define::IReceivedMessage::new(
                 1,
                 "POLKADOT".to_string(),
                 "POLKADOT".to_string(),
                 ink_prelude::vec::Vec::from(alice),
                 ink_prelude::vec::Vec::from(alice),
-                ink_prelude::vec![],
+                sqos,
                 default_num,
                 default_act,
                 data,
                 super::super::message_define::ISession {
                     id: 0,
                     session_type: 0,
-                    callback: ink_prelude::vec![],
-                    commitment: ink_prelude::vec![],
-                    answer: ink_prelude::vec![],
+                    callback: Vec::<u8>::from([0x11, 0x11, 0x11, 0x11]),
+                    commitment: Vec::<u8>::from([0x22]),
+                    answer: Vec::<u8>::from([0x33]),
                 },
             );
             
             let b = recv_msg.into_raw_data();
-            println!("{:?}", b);
+            println!("test_raw_data_received{:?}", b);
         }
         
         /// test raw data of sent message
         #[ink::test]
         fn test_raw_data_sent() {
             let accounts = ink_env::test::default_accounts::<ink_env::DefaultEnvironment>();
-            let default_num: [u8;32] = [0; 32];
-            let default_act: [u8;4] = [0;4];
+            let mut default_num: [u8;32] = [0; 32];
+            default_num[31] = 0x34;
+            default_num[30] = 0x12;
+            let default_act: [u8;4] = [0x12, 0x34, 0x56, 0x78];
             let mut msg_payload = crate::message_protocol::MessagePayload::new();
             msg_payload.push_item(String::try_from("greeting").unwrap(), MsgDetail::InkString("asdf".to_string()));
             let data = msg_payload.to_bytes();
             let alice: [u8; 32] = *accounts.alice.as_ref();
+            let mut sqos: Vec<crate::message_define::ISQoS> = ink_prelude::vec![];
+            sqos.push(crate::message_define::ISQoS::new(crate::message_define::ISQoSType::SelectionDelay, Vec::<u8>::from([0x12, 0x34, 0x56, 0x78])));
             let recv_msg = super::super::message_define::IReceivedMessage::new(
                 1,
                 "POLKADOT".to_string(),
                 "POLKADOT".to_string(),
                 ink_prelude::vec::Vec::from(alice),
                 ink_prelude::vec::Vec::from(alice),
-                ink_prelude::vec![],
+                sqos,
                 default_num,
                 default_act,
                 data,
                 super::super::message_define::ISession {
                     id: 0,
                     session_type: 0,
-                    callback: ink_prelude::vec![],
-                    commitment: ink_prelude::vec![],
-                    answer: ink_prelude::vec![],
+                    callback: Vec::<u8>::from([0x11, 0x11, 0x11, 0x11]),
+                    commitment: Vec::<u8>::from([0x22]),
+                    answer: Vec::<u8>::from([0x33]),
                 },
             );
 
@@ -528,8 +536,8 @@ mod payload {
         /// test raw data of SQoS
         #[ink::test]
         fn test_raw_data_sqos() {
-            let sqos1 = super::super::message_define::ISQoS::new(super::super::message_define::ISQoSType::Isolation, Some(ink_prelude::vec![1, 2]));
-            let sqos2 = super::super::message_define::ISQoS::new(super::super::message_define::ISQoSType::Isolation, None);
+            let sqos1 = super::super::message_define::ISQoS::new(super::super::message_define::ISQoSType::Isolation, ink_prelude::vec![1, 2]);
+            let sqos2 = super::super::message_define::ISQoS::new(super::super::message_define::ISQoSType::Isolation, ink_prelude::vec![]);
 
             assert_eq!(sqos1.into_raw_data(), ink_prelude::vec![8, 1, 2], "sqos1 `into_raw_data error!`");
             assert_eq!(sqos2.into_raw_data(), ink_prelude::vec![8]);

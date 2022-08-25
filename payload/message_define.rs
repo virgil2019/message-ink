@@ -118,7 +118,7 @@ impl ::scale_info::TypeInfo for ISQoSType {
 // #[cfg_attr(feature = "std", derive(Debug, scale_info::TypeInfo))]
 pub struct ISQoS {
     pub t: ISQoSType,
-    pub v: Option<ink_prelude::vec::Vec<u8>>,
+    pub v: ink_prelude::vec::Vec<u8>,
 }
 
 impl scale_info::TypeInfo for ISQoS {
@@ -129,13 +129,13 @@ impl scale_info::TypeInfo for ISQoS {
                         .path(::scale_info::Path::new("ISQoS", module_path!()))
                         .composite(::scale_info::build::Fields::named()
                         .field(|f| f.ty::<ISQoSType>().name("t").type_name("ISQoSType"))
-                        .field(|f| f.ty::<Option<ink_prelude::vec::Vec<u8>>>().name("v").type_name("Option<ink_prelude::vec::Vec<u8>>"))
+                        .field(|f| f.ty::<ink_prelude::vec::Vec<u8>>().name("v").type_name("ink_prelude::vec::Vec<u8>"))
                     )
     }
 }
 
 impl ISQoS {
-    pub fn new(t: ISQoSType, v: Option<ink_prelude::vec::Vec<u8>>) -> Self {
+    pub fn new(t: ISQoSType, v: ink_prelude::vec::Vec<u8>) -> Self {
         Self {
             t,
             v,
@@ -160,7 +160,7 @@ impl ISQoS {
 
         raw_buffer.append(&mut ink_prelude::vec::Vec::from(t_u8.to_be_bytes()));
         // raw_buffer.append(&mut self.v.clone().unwrap_or_else(ink_prelude::vec::Vec::new));
-        raw_buffer.append(&mut self.v.clone().unwrap_or_default());
+        raw_buffer.append(&mut self.v.clone());
 
         raw_buffer
     }
