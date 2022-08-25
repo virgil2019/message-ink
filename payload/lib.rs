@@ -423,7 +423,7 @@ mod payload {
                 ink_prelude::vec![],
                 super::super::message_define::ISession {
                     id: 128,
-                    callback: crate::ink_prelude::vec![],
+                    callback: ink_prelude::vec![],
                 },
             );
 
@@ -476,7 +476,7 @@ mod payload {
                 data,
                 super::super::message_define::ISession {
                     id: 0,
-                    callback: crate::ink_prelude::vec![],
+                    callback: ink_prelude::vec![],
                 },
             );
             
@@ -506,7 +506,7 @@ mod payload {
                 data,
                 super::super::message_define::ISession {
                     id: 0,
-                    callback: crate::ink_prelude::vec![],
+                    callback: ink_prelude::vec![],
                 },
             );
 
