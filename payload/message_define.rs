@@ -1,6 +1,6 @@
 // include!("message_protocol.rs");
 
-use ink_prelude::{
+use ink::prelude::{
     string::String,
 };
 
@@ -8,6 +8,8 @@ use scale::{
     Encode,
     Decode,
 };
+
+use crate::message_protocol::MessagePayload;
 
 /// Errors for cross-chain contract
 #[derive(Encode, Decode, Debug, PartialEq, Eq, Copy, Clone)]
@@ -45,17 +47,17 @@ impl scale_info::TypeInfo for IError {
 #[derive(Decode, Encode, Clone)]
 // #[cfg_attr(feature = "std", derive(Debug, scale_info::TypeInfo))]
 pub struct IContent {
-    pub contract: String,
-    pub action: String,
-    pub data: ink_prelude::vec::Vec<u8>,
+    pub contract: ink::prelude::vec::Vec<u8>,
+    pub action: ink::prelude::vec::Vec<u8>,
+    pub data: ink::prelude::vec::Vec<u8>,
 }
 
 impl IContent {
-    pub fn new(contract: String, action: String, data: ink_prelude::vec::Vec<u8>) -> Self {
+    pub fn new(contract: ink::prelude::vec::Vec<u8>, action: ink::prelude::vec::Vec<u8>, data: ink::prelude::vec::Vec<u8>) -> Self {
         Self {
-            contract: contract,
-            action: action,
-            data: data,
+            contract,
+            action,
+            data,
         }
     }
 }
@@ -67,9 +69,9 @@ impl scale_info::TypeInfo for IContent {
         ::scale_info::Type::builder()
                         .path(::scale_info::Path::new("IContent", module_path!()))
                         .composite(::scale_info::build::Fields::named()
-                        .field(|f| f.ty::<String>().name("contract").type_name("String"))
-                        .field(|f| f.ty::<String>().name("action").type_name("String"))
-                        .field(|f| f.ty::<ink_prelude::vec::Vec<u8>>().name("data").type_name("ink_prelude::vec::Vec<u8>"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<u8>>().name("contract").type_name("ink::prelude::vec::Vec<u8>"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<u8>>().name("action").type_name("ink::prelude::vec::Vec<u8>"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<u8>>().name("data").type_name("ink::prelude::vec::Vec<u8>"))
                     )
     }
 }
@@ -116,7 +118,7 @@ impl ::scale_info::TypeInfo for ISQoSType {
 // #[cfg_attr(feature = "std", derive(Debug, scale_info::TypeInfo))]
 pub struct ISQoS {
     pub t: ISQoSType,
-    pub v: Option<String>,
+    pub v: ink::prelude::vec::Vec<u8>,
 }
 
 impl scale_info::TypeInfo for ISQoS {
@@ -127,17 +129,40 @@ impl scale_info::TypeInfo for ISQoS {
                         .path(::scale_info::Path::new("ISQoS", module_path!()))
                         .composite(::scale_info::build::Fields::named()
                         .field(|f| f.ty::<ISQoSType>().name("t").type_name("ISQoSType"))
-                        .field(|f| f.ty::<Option<String>>().name("v").type_name("Option<String>"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<u8>>().name("v").type_name("ink::prelude::vec::Vec<u8>"))
                     )
     }
 }
 
 impl ISQoS {
-    pub fn new(t: ISQoSType, v: Option<String>) -> Self {
+    pub fn new(t: ISQoSType, v: ink::prelude::vec::Vec<u8>) -> Self {
         Self {
             t,
             v,
         }
+    }
+
+    pub fn into_raw_data(&self) -> ink::prelude::vec::Vec<u8> {
+        let mut raw_buffer = ink::prelude::vec![];
+
+        let t_u8: u8 = match self.t {
+            ISQoSType::Reveal => 0,
+            ISQoSType::Challenge => 1,
+            ISQoSType::Threshold => 2,
+            ISQoSType::Priority => 3,
+            ISQoSType::ExceptionRollback => 4,
+            ISQoSType::SelectionDelay => 5,
+            ISQoSType::Anonymous => 6,
+            ISQoSType::Identity => 7,
+            ISQoSType::Isolation => 8,
+            ISQoSType::CrossVerify => 9,
+        };
+
+        raw_buffer.append(&mut ink::prelude::vec::Vec::from(t_u8.to_be_bytes()));
+        // raw_buffer.append(&mut self.v.clone().unwrap_or_else(ink::prelude::vec::Vec::new));
+        raw_buffer.append(&mut self.v.clone());
+
+        raw_buffer
     }
 }
 
@@ -146,15 +171,34 @@ impl ISQoS {
 // #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
 pub struct ISession {
     pub id: u128,
-    pub callback: Option<ink_prelude::vec::Vec<u8>>,
+    pub session_type: u8,
+    pub callback: ink::prelude::vec::Vec<u8>,
+    pub commitment: ink::prelude::vec::Vec<u8>,
+    pub answer: ink::prelude::vec::Vec<u8>,
 }
 
 impl ISession {
-    pub fn new(id: u128, callback: Option<ink_prelude::vec::Vec<u8>>) -> Self {
+    pub fn new(id: u128, session_type: u8, callback: ink::prelude::vec::Vec<u8>,
+            commitment: ink::prelude::vec::Vec<u8>, answer: ink::prelude::vec::Vec<u8>) -> Self {
         Self {
             id,
+            session_type,
             callback,
+            commitment,
+            answer,
         }
+    }
+
+    pub fn into_raw_data(&self) -> ink::prelude::vec::Vec<u8> {
+        let mut raw_buffer = ink::prelude::vec![];
+
+        raw_buffer.append(&mut ink::prelude::vec::Vec::from(self.id.to_be_bytes()));
+        raw_buffer.append(&mut ink::prelude::vec::Vec::from(self.session_type.to_be_bytes()));
+        raw_buffer.append(&mut self.callback.clone());
+        raw_buffer.append(&mut self.commitment.clone());
+        raw_buffer.append(&mut self.answer.clone());
+
+        raw_buffer
     }
 }
 
@@ -166,7 +210,10 @@ impl scale_info::TypeInfo for ISession {
                         .path(::scale_info::Path::new("ISession", module_path!()))
                         .composite(::scale_info::build::Fields::named()
                         .field(|f| f.ty::<u128>().name("id").type_name("u128"))
-                        .field(|f| f.ty::<Option<ink_prelude::vec::Vec<u8>>>().name("callback").type_name("Option<ink_prelude::vec::Vec<u8>>"))
+                        .field(|f| f.ty::<u8>().name("session_type").type_name("u8"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<u8>>().name("callback").type_name("ink::prelude::vec::Vec<u8>"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<u8>>().name("commitment").type_name("ink::prelude::vec::Vec<u8>"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<u8>>().name("answer").type_name("ink::prelude::vec::Vec<u8>"))
                     )
     }
 }
@@ -177,12 +224,13 @@ impl scale_info::TypeInfo for ISession {
 pub struct IReceivedMessage {
     pub id: u128,
     pub from_chain: String,
-    pub sender: String,
-    pub signer: String,
-    pub sqos: ink_prelude::vec::Vec<ISQoS>,
+    pub to_chain: String,
+    pub sender: ink::prelude::vec::Vec<u8>,
+    pub signer: ink::prelude::vec::Vec<u8>,
+    pub sqos: ink::prelude::vec::Vec<ISQoS>,
     pub contract: [u8;32],
     pub action: [u8;4],
-    pub data: ink_prelude::vec::Vec<u8>,
+    pub data: ink::prelude::vec::Vec<u8>,
     pub session: ISession,
 }
 
@@ -195,23 +243,25 @@ impl scale_info::TypeInfo for IReceivedMessage {
                         .composite(::scale_info::build::Fields::named()
                         .field(|f| f.ty::<u128>().name("id").type_name("u128"))
                         .field(|f| f.ty::<String>().name("from_chain").type_name("String"))
-                        .field(|f| f.ty::<String>().name("sender").type_name("String"))
-                        .field(|f| f.ty::<String>().name("signer").type_name("String"))
-                        .field(|f| f.ty::<ink_prelude::vec::Vec<ISQoS>>().name("sqos").type_name("ink_prelude::vec::Vec<ISQoS>"))
+                        .field(|f| f.ty::<String>().name("to_chain").type_name("String"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<u8>>().name("sender").type_name("ink::prelude::vec::Vec<u8>"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<u8>>().name("signer").type_name("ink::prelude::vec::Vec<u8>"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<ISQoS>>().name("sqos").type_name("ink::prelude::vec::Vec<ISQoS>"))
                         .field(|f| f.ty::<[u8;32]>().name("contract").type_name("[u8;32]"))
                         .field(|f| f.ty::<[u8;4]>().name("action").type_name("[u8;4]"))
-                        .field(|f| f.ty::<ink_prelude::vec::Vec<u8>>().name("data").type_name("ink_prelude::vec::Vec<u8>"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<u8>>().name("data").type_name("ink::prelude::vec::Vec<u8>"))
                         .field(|f| f.ty::<ISession>().name("session").type_name("ISession"))
                     )
     }
 }
 
 impl IReceivedMessage {
-    pub fn new(id: u128, from_chain: String, sender: String, signer: String, sqos: ink_prelude::vec::Vec<ISQoS>,
-        contract: [u8;32], action: [u8;4], data: ink_prelude::vec::Vec<u8>, session: ISession) -> Self {
+    pub fn new(id: u128, from_chain: String, to_chain: String, sender: ink::prelude::vec::Vec<u8>, signer: ink::prelude::vec::Vec<u8>, sqos: ink::prelude::vec::Vec<ISQoS>,
+        contract: [u8;32], action: [u8;4], data: ink::prelude::vec::Vec<u8>, session: ISession) -> Self {
         Self {
             id,
             from_chain,
+            to_chain,
             sender,
             signer,
             sqos,
@@ -222,16 +272,38 @@ impl IReceivedMessage {
         }
     }
 
-    pub fn into_bytes(&self) -> ink_prelude::vec::Vec<u8> {
-        let mut msg_code: ink_prelude::vec::Vec<u8> = ink_prelude::vec::Vec::<u8>::new();
+    pub fn into_bytes(&self) -> ink::prelude::vec::Vec<u8> {
+        let mut msg_code: ink::prelude::vec::Vec<u8> = ink::prelude::vec::Vec::<u8>::new();
         scale::Encode::encode_to(self, &mut msg_code);
         msg_code
     }
 
-    pub fn into_hash(&self) -> <ink_env::hash::Sha2x256 as ink_env::hash::HashOutput>::Type {
-        let mut output = <ink_env::hash::Sha2x256 as ink_env::hash::HashOutput>::Type::default();
-        ink_env::hash_encoded::<ink_env::hash::Sha2x256, _>(&self, &mut output);
+    pub fn into_hash<T: ink::env::hash::HashOutput+ink::env::hash::CryptoHash>(&self) -> <T as ink::env::hash::HashOutput>::Type {
+        let mut output = <T as ink::env::hash::HashOutput>::Type::default();
+        ink::env::hash_encoded::<T, _>(&self, &mut output);
         output
+    }
+
+    pub fn into_raw_data(&self) -> ink::prelude::vec::Vec<u8> {
+        let mut raw_string_vec = ink::prelude::vec![];
+        raw_string_vec.append(&mut ink::prelude::vec::Vec::from(self.id.to_be_bytes()));
+        raw_string_vec.append(&mut ink::prelude::vec::Vec::from(self.from_chain.as_bytes()));
+        raw_string_vec.append(&mut ink::prelude::vec::Vec::from(self.to_chain.as_bytes()));
+
+        for s in self.sqos.iter() {
+            raw_string_vec.append(&mut s.into_raw_data());
+        }
+
+        raw_string_vec.append(&mut ink::prelude::vec::Vec::from(self.contract));
+        raw_string_vec.append(&mut ink::prelude::vec::Vec::from(self.action));
+        let payload: MessagePayload = scale::Decode::decode(&mut self.data.as_slice()).unwrap();
+        raw_string_vec.append(&mut payload.into_raw_data());
+        raw_string_vec.append(&mut self.sender.clone());
+        raw_string_vec.append(&mut self.signer.clone());
+
+        raw_string_vec.append(&mut self.session.into_raw_data());
+
+        raw_string_vec
     }
 }
 
@@ -240,7 +312,7 @@ impl IReceivedMessage {
 // #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
 pub struct ISentMessage {
     pub to_chain: String,
-    pub sqos: ink_prelude::vec::Vec<ISQoS>,
+    pub sqos: ink::prelude::vec::Vec<ISQoS>,
     pub content: IContent,
     pub session: ISession,
 }
@@ -253,7 +325,7 @@ impl scale_info::TypeInfo for ISentMessage {
                         .path(::scale_info::Path::new("ISentMessage", module_path!()))
                         .composite(::scale_info::build::Fields::named()
                         .field(|f| f.ty::<String>().name("to_chain").type_name("String"))
-                        .field(|f| f.ty::<ink_prelude::vec::Vec<ISQoS>>().name("sqos").type_name("ink_prelude::vec::Vec<ISQoS>"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<ISQoS>>().name("sqos").type_name("ink::prelude::vec::Vec<ISQoS>"))
                         .field(|f| f.ty::<IContent>().name("content").type_name("IContent"))
                         .field(|f| f.ty::<ISession>().name("session").type_name("ISession"))
                     )
@@ -261,7 +333,7 @@ impl scale_info::TypeInfo for ISentMessage {
 }
 
 impl ISentMessage {
-    pub fn new(to_chain: String, sqos: ink_prelude::vec::Vec<ISQoS>, content: IContent, session: ISession) -> Self {
+    pub fn new(to_chain: String, sqos: ink::prelude::vec::Vec<ISQoS>, content: IContent, session: ISession) -> Self {
         Self {
             to_chain,
             sqos,
@@ -276,7 +348,7 @@ impl ISentMessage {
 // #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
 pub struct IRequestMessage {
     pub to_chain: String,
-    pub sqos: ink_prelude::vec::Vec<ISQoS>,
+    pub sqos: ink::prelude::vec::Vec<ISQoS>,
     pub content: IContent,
 }
 
@@ -288,14 +360,14 @@ impl scale_info::TypeInfo for IRequestMessage {
                         .path(::scale_info::Path::new("IRequestMessage", module_path!()))
                         .composite(::scale_info::build::Fields::named()
                         .field(|f| f.ty::<String>().name("to_chain").type_name("String"))
-                        .field(|f| f.ty::<ink_prelude::vec::Vec<ISQoS>>().name("sqos").type_name("ink_prelude::vec::Vec<ISQoS>"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<ISQoS>>().name("sqos").type_name("ink::prelude::vec::Vec<ISQoS>"))
                         .field(|f| f.ty::<IContent>().name("content").type_name("IContent"))
                     )
     }
 }
 
 impl IRequestMessage {
-    pub fn new(to_chain: String, sqos: ink_prelude::vec::Vec<ISQoS>, content: IContent) -> Self {
+    pub fn new(to_chain: String, sqos: ink::prelude::vec::Vec<ISQoS>, content: IContent) -> Self {
         Self {
             to_chain,
             sqos,
@@ -308,8 +380,8 @@ impl IRequestMessage {
 #[derive(Decode, Encode, Clone)]
 // #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
 pub struct IResponseMessage {
-    pub sqos: ink_prelude::vec::Vec<ISQoS>,
-    pub data: ink_prelude::vec::Vec<u8>,
+    pub sqos: ink::prelude::vec::Vec<ISQoS>,
+    pub data: ink::prelude::vec::Vec<u8>,
 }
 
 impl scale_info::TypeInfo for IResponseMessage {
@@ -319,14 +391,14 @@ impl scale_info::TypeInfo for IResponseMessage {
         ::scale_info::Type::builder()
                         .path(::scale_info::Path::new("IResponseMessage", module_path!()))
                         .composite(::scale_info::build::Fields::named()
-                        .field(|f| f.ty::<ink_prelude::vec::Vec<ISQoS>>().name("sqos").type_name("ink_prelude::vec::Vec<ISQoS>"))
-                        .field(|f| f.ty::<ink_prelude::vec::Vec<u8>>().name("data").type_name("ink_prelude::vec::Vec<u8>"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<ISQoS>>().name("sqos").type_name("ink::prelude::vec::Vec<ISQoS>"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<u8>>().name("data").type_name("ink::prelude::vec::Vec<u8>"))
                     )
     }
 }
 
 impl IResponseMessage {
-    pub fn new(sqos: ink_prelude::vec::Vec<ISQoS>, data: ink_prelude::vec::Vec<u8>) -> Self {
+    pub fn new(sqos: ink::prelude::vec::Vec<ISQoS>, data: ink::prelude::vec::Vec<u8>) -> Self {
         Self {
             sqos,
             data,
@@ -340,9 +412,9 @@ impl IResponseMessage {
 pub struct IContext {
     pub id: u128,
     pub from_chain: String,
-    pub sender: String,
-    pub signer: String,
-    pub sqos: ink_prelude::vec::Vec<ISQoS>,
+    pub sender: ink::prelude::vec::Vec<u8>,
+    pub signer: ink::prelude::vec::Vec<u8>,
+    pub sqos: ink::prelude::vec::Vec<ISQoS>,
     pub contract: [u8;32],
     pub action: [u8;4],
     pub session: ISession,
@@ -357,9 +429,9 @@ impl scale_info::TypeInfo for IContext {
                         .composite(::scale_info::build::Fields::named()
                         .field(|f| f.ty::<u128>().name("id").type_name("u128"))
                         .field(|f| f.ty::<String>().name("from_chain").type_name("String"))
-                        .field(|f| f.ty::<String>().name("sender").type_name("String"))
-                        .field(|f| f.ty::<String>().name("signer").type_name("String"))
-                        .field(|f| f.ty::<ink_prelude::vec::Vec<ISQoS>>().name("sqos").type_name("ink_prelude::vec::Vec<ISQoS>"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<u8>>().name("sender").type_name("ink::prelude::vec::Vec<u8>"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<u8>>().name("signer").type_name("ink::prelude::vec::Vec<u8>"))
+                        .field(|f| f.ty::<ink::prelude::vec::Vec<ISQoS>>().name("sqos").type_name("ink::prelude::vec::Vec<ISQoS>"))
                         .field(|f| f.ty::<[u8;32]>().name("contract").type_name("[u8;32]"))
                         .field(|f| f.ty::<[u8;4]>().name("action").type_name("[u8;4]"))
                         .field(|f| f.ty::<ISession>().name("session").type_name("ISession"))
@@ -368,7 +440,7 @@ impl scale_info::TypeInfo for IContext {
 }
 
 impl IContext {
-    pub fn new(id: u128, from_chain: String, sender: String, signer: String, sqos: ink_prelude::vec::Vec<ISQoS>,
+    pub fn new(id: u128, from_chain: String, sender: ink::prelude::vec::Vec<u8>, signer: ink::prelude::vec::Vec<u8>, sqos: ink::prelude::vec::Vec<ISQoS>,
             contract: [u8;32], action: [u8;4], session: ISession) -> Self {
         Self {
             id,
