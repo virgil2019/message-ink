@@ -1,5 +1,7 @@
 # message_ink
 
+<img width="750" alt="web3 foundation_grants_badge_white" src="https://user-images.githubusercontent.com/83746881/187579523-a40f4fe5-178c-4dae-9482-aa737ff6226b.png">
+
 This is the message defination lib for the protocol stack in ink!.
 
 ## Usage
@@ -23,4 +25,3 @@ pub trait InMsgType {
 In addition, with the help of `InMsgType` for `MsgDetail`, `MessageItem` can be directly decoded into a normal type with [x.in_to()](https://github.com/dantenetwork/message-ink/blob/f7bd6571356c1eb419c67b50cb11ae9506cd351c/payload/message_protocol.rs#L505), in which x is an instance of `MessageItem`.
 
 That's the main interface of the message protocol for ink! smart contracts, that is very easy to use.
-
