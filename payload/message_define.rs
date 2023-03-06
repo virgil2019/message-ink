@@ -328,9 +328,9 @@ impl scale_info::TypeInfo for IVVMessageRecved {
 }
 
 impl IVVMessageRecved {
-    pub fn new(recv_msg_ref: &IReceivedMessage, signature: [u8; 65]) -> Self {
+    pub fn new(recved_msg: IReceivedMessage, signature: [u8; 65]) -> Self {
         Self {
-            recved_msg: recv_msg_ref.clone(),
+            recved_msg,
             signature,
         }
     }
