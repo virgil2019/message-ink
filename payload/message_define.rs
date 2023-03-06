@@ -307,6 +307,52 @@ impl IReceivedMessage {
     }
 }
 
+/// vv message structure
+#[derive(Decode, Encode, Clone)]
+pub struct IVVMessageRecved {
+    pub recved_msg: IReceivedMessage,
+    pub signature: [u8; 65],
+}
+
+impl scale_info::TypeInfo for IVVMessageRecved {
+    type Identity = Self;
+
+    fn type_info() -> ::scale_info::Type {
+        ::scale_info::Type::builder()
+                        .path(::scale_info::Path::new("IVVMessageRecved", module_path!()))
+                        .composite(::scale_info::build::Fields::named()
+                        .field(|f| f.ty::<IReceivedMessage>().name("recved_msg").type_name("IReceivedMessage"))
+                        .field(|f| f.ty::<[u8;65]>().name("signature").type_name("[u8;65]"))
+                    )
+    }
+}
+
+impl IVVMessageRecved {
+    pub fn new(recv_msg_ref: &IReceivedMessage, signature: [u8; 65]) -> Self {
+        Self {
+            recved_msg: recv_msg_ref.clone(),
+            signature,
+        }
+    }
+
+    pub fn signature_verify<T>(&self, acct: ink::primitives::AccountId) -> bool
+    where
+        T : ink::env::hash::HashOutput<Type = [u8; 32]>,
+        T : ink::env::hash::CryptoHash,
+    {
+        let mut msg_hash = <T as ink::env::hash::HashOutput>::Type::default();
+        ink::env::hash_bytes::<T>(&self.recved_msg.into_raw_data(), &mut msg_hash);
+
+        let mut compressed_pubkey = [0; 33];
+        ink::env::ecdsa_recover(&self.signature, &msg_hash, &mut compressed_pubkey).unwrap();
+
+        let mut addr_hash = <T as ink::env::hash::HashOutput>::Type::default();
+        ink::env::hash_bytes::<T>(&compressed_pubkey, &mut addr_hash);
+
+        ink::primitives::AccountId::from(addr_hash) == acct
+    }
+}
+
 /// Sent message structure
 #[derive(Decode, Encode, Clone)]
 // #[cfg_attr(feature = "std", derive(scale_info::TypeInfo))]
